@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Historic Warrington</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+/* ── RESET & BASE ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Georgia,'Times New Roman',serif;background:#f5f0e8;color:#2c2416;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* ── HEADER ── */
+header{background:#2c2416;color:#f5f0e8;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+header h1{font-size:1.2rem;letter-spacing:.04em;}
+header span{font-size:.78rem;opacity:.55;font-style:italic;}
+.header-spacer{flex:1;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;overflow:hidden;min-height:0;}
+
+/* ── SIDEBAR ── */
+#sidebar{width:420px;flex-shrink:0;background:#faf7f2;border-right:1px solid #d4c9b0;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:0;}
+
+/* ── TABS ── */
+.tab-bar{display:flex;flex-shrink:0;border-bottom:2px solid #d4c9b0;background:#f0ebe0;}
+.tab-btn{flex:1;padding:9px 6px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.72rem;color:#7a6a50;letter-spacing:.01em;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab-btn:hover{color:#2c2416;background:#e8e0d0;}
+.tab-btn.active{color:#2c2416;border-bottom-color:#2c2416;font-weight:bold;}
+#tab-war-btn{color:#8a6a20;background:#f5efe0;border-left:1px solid #d4c9b0;}
+#tab-war-btn.active{color:#3a2000;border-bottom-color:#8a6a20;background:#ede5d0;}
+.tab-content{display:flex;flex-direction:column;flex:1;overflow-y:auto;min-height:0;}
+.tab-content.hidden{display:none!important;}
+
+/* ── SEARCH BAR ── */
+.search-bar{padding:8px 12px;background:#f5f0e8;border-bottom:1px solid #d4c9b0;flex-shrink:0;}
+.search-input{width:100%;padding:6px 10px;border:1px solid #c0b090;border-radius:3px;font-family:Arial,sans-serif;font-size:.8rem;background:#fff;outline:none;margin-bottom:5px;}
+.search-input:focus{border-color:#7a6a40;}
+.area-select{width:100%;padding:5px 8px;border:1px solid #c0b090;border-radius:3px;font-family:Arial,sans-serif;font-size:.78rem;background:#fff;color:#2c2416;outline:none;}
+.area-desc{padding:7px 10px;background:#ede7d8;border-radius:3px;font-size:.72rem;font-family:Arial,sans-serif;color:#5a4a30;line-height:1.5;margin-top:5px;}
+.area-stories-link{display:block;margin-top:4px;font-size:.7rem;color:#2a5a8a;cursor:pointer;text-decoration:underline;}
+
+/* ── ADD BUTTONS ── */
+.add-btn{display:flex;align-items:center;gap:9px;width:100%;padding:11px 14px;color:#f5f0e8;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.82rem;letter-spacing:.02em;text-align:left;transition:background .15s;flex-shrink:0;}
+.add-btn .icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.add-btn-site{background:#3e3220;}.add-btn-site:hover{background:#524232;}.add-btn-site .icon{background:#b8860b;}
+.add-btn-walk{background:#4a2010;}.add-btn-walk:hover{background:#622a18;}.add-btn-walk .icon{background:#c03020;}
+.add-btn-story{background:#1a3a2a;}.add-btn-story:hover{background:#2a4a3a;}.add-btn-story .icon{background:#2a7a5a;}
+
+/* ── FORM PANELS ── */
+.form-panel{display:none;background:#f0ebe0;border-bottom:2px solid #b0a070;padding:13px 14px;flex-shrink:0;}
+.form-panel.open{display:block;}
+.form-group{margin-bottom:8px;}
+.form-group label{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:#6a5a40;margin-bottom:2px;}
+.form-hint{font-size:.65rem;color:#8a7a60;font-family:Arial,sans-serif;margin-top:2px;font-style:italic;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:5px 8px;border:1px solid #c0b090;border-radius:3px;background:#fff;font-family:Arial,sans-serif;font-size:.78rem;color:#2c2416;outline:none;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#7a6a40;}
+.form-group textarea{resize:vertical;min-height:60px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.photo-entry{display:flex;gap:5px;margin-bottom:4px;}
+.photo-entry input{flex:1;}
+.photo-entry button{padding:3px 8px;background:#8a3a2a;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:.72rem;font-family:Arial,sans-serif;}
+.add-photo-link{font-size:.72rem;color:#2a5a8a;cursor:pointer;font-family:Arial,sans-serif;text-decoration:underline;display:block;margin-top:3px;}
+.form-actions{display:flex;gap:6px;margin-top:11px;}
+.btn-submit{flex:1;padding:7px;background:#2c2416;color:#f5f0e8;border:none;border-radius:3px;font-family:Georgia,serif;font-size:.82rem;cursor:pointer;transition:background .15s;}
+.btn-submit:hover{background:#3e3420;}
+.btn-cancel{padding:7px 12px;background:none;border:1px solid #b0a080;border-radius:3px;font-family:Arial,sans-serif;font-size:.77rem;cursor:pointer;color:#6a5a40;}
+.btn-cancel:hover{background:#e0d8c8;}
+.form-error{display:none;color:#c03020;font-size:.72rem;font-family:Arial,sans-serif;margin-top:6px;padding:4px 8px;background:#fde8e8;border-radius:3px;border:1px solid #e0a0a0;}
+.map-action-btn{padding:5px 10px;border:none;border-radius:3px;font-size:.72rem;cursor:pointer;font-family:Arial,sans-serif;color:#fff;transition:background .15s;}
+.map-action-btn:disabled{opacity:.4;cursor:default;}
+.btn-draw{background:#3a5a7a;}.btn-draw:hover:not(:disabled){background:#2a4a6a;}.btn-draw.active{background:#b04a20;}
+.btn-undo{background:#7a6a40;}.btn-undo:hover:not(:disabled){background:#6a5a30;}
+.btn-clear{background:#8a3a2a;}.btn-clear:hover:not(:disabled){background:#7a2a1a;}
+.btn-pick{background:#3a5a7a;width:100%;margin-top:5px;}.btn-pick:hover{background:#2a4a6a;}.btn-pick.active{background:#b04a20;}
+.draw-info{font-size:.72rem;font-family:Arial,sans-serif;color:#6a5a40;margin-bottom:5px;min-height:1em;}
+.hint-box{display:none;font-size:.68rem;color:#b04a20;font-family:Arial,sans-serif;margin-top:4px;padding:4px 8px;background:#fde8d8;border-radius:3px;border:1px solid #e0b090;}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:8px 13px;border-bottom:1px solid #d4c9b0;background:#f0ebe0;flex-shrink:0;}
+.filter-bar label{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:#7a6a50;display:block;margin-bottom:4px;}
+.filter-buttons{display:flex;flex-wrap:wrap;gap:4px;}
+.filter-btn{font-size:.68rem;padding:2px 9px;border:1px solid #b0a080;border-radius:11px;background:#faf7f2;cursor:pointer;font-family:Arial,sans-serif;transition:all .15s;}
+.filter-btn.on{background:#2c2416;color:#f5f0e8;border-color:#2c2416;}
+
+/* ── LIST HEADER ── */
+.list-header{padding:7px 13px;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#7a6a50;border-bottom:1px solid #d4c9b0;background:#f0ebe0;flex-shrink:0;}
+
+/* ── SITE & WALK & STORY CARDS ── */
+.site-card,.walk-card,.story-card{padding:11px 14px;border-bottom:1px solid #e8e0d0;cursor:pointer;transition:background .15s;}
+.site-card:hover,.walk-card:hover,.story-card:hover{background:#ede7d8;}
+.site-card.active,.walk-card.active{background:#d9cdb8;}
+.site-card.user-added{border-left:3px solid #b8860b;padding-left:11px;}
+.walk-card{border-left:3px solid #c03020;padding-left:11px;}
+.story-card{border-left:3px solid #2a7a5a;padding-left:11px;cursor:default;}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;}
+.card-top h3{font-size:.88rem;flex:1;}
+.card-era,.card-meta{font-size:.69rem;color:#8a7a60;font-style:italic;margin:2px 0 4px;font-family:Arial,sans-serif;}
+.card-meta{font-style:normal;display:flex;gap:10px;}
+.card-desc{font-size:.75rem;color:#5a4e3c;line-height:1.43;font-family:Arial,sans-serif;}
+.card-actions{display:flex;gap:5px;margin-top:7px;align-items:center;}
+.icon-btn{background:none;border:1px solid #c0b090;border-radius:3px;cursor:pointer;font-size:.7rem;padding:2px 7px;color:#6a5a40;font-family:Arial,sans-serif;transition:all .15s;}
+.icon-btn:hover{background:#e0d8c8;border-color:#a09070;}
+.delete-btn{background:none;border:none;color:#a09080;cursor:pointer;font-size:.82rem;padding:0;line-height:1;flex-shrink:0;margin-top:1px;}
+.delete-btn:hover{color:#c03020;}
+.thumb{width:100%;height:78px;object-fit:cover;border-radius:3px;margin-bottom:7px;display:block;}
+.badge{display:inline-block;font-size:.61rem;font-family:Arial,sans-serif;padding:2px 7px;border-radius:10px;margin-top:4px;font-weight:bold;letter-spacing:.03em;}
+.badge-I{background:#b5432a;color:#fff;}.badge-II-star{background:#c97c2a;color:#fff;}.badge-II{background:#5a7a3a;color:#fff;}.badge-other{background:#4a6a8a;color:#fff;}.badge-user{background:#b8860b;color:#fff;}
+.badge-easy{background:#3a7a3a;color:#fff;}.badge-moderate{background:#8a6a20;color:#fff;}.badge-challenging{background:#8a3a20;color:#fff;}
+.story-expand{font-size:.7rem;color:#2a5a8a;font-family:Arial,sans-serif;cursor:pointer;margin-top:4px;display:block;text-decoration:underline;}
+
+/* ── HEROES ── */
+.walks-hero,.stories-hero{color:#f5f0e8;padding:15px 14px 12px;text-align:center;flex-shrink:0;}
+.walks-hero{background:linear-gradient(150deg,#3a2010,#6a4228);}
+.stories-hero{background:linear-gradient(150deg,#1a3a2a,#2a6a4a);}
+.walks-hero h2,.stories-hero h2{font-size:1rem;letter-spacing:.06em;margin-bottom:2px;}
+.walks-hero p,.stories-hero p{font-size:.72rem;opacity:.75;font-style:italic;font-family:Arial,sans-serif;}
+
+/* ── SITE DETAIL PANEL ── */
+#siteDetailPanel{position:absolute;top:0;left:0;right:0;bottom:0;background:#faf7f2;z-index:200;display:none;flex-direction:column;overflow-y:auto;}
+#siteDetailPanel.open{display:flex;}
+.detail-back-bar{display:flex;align-items:center;gap:8px;padding:9px 13px;background:#f0ebe0;border-bottom:1px solid #d4c9b0;flex-shrink:0;}
+.detail-back-bar button{background:none;border:1px solid #b0a080;border-radius:3px;padding:4px 10px;cursor:pointer;font-family:Arial,sans-serif;font-size:.77rem;color:#5a4a30;}
+.detail-back-bar button:hover{background:#e0d8c8;}
+.detail-back-bar .spacer{flex:1;}
+.detail-info{padding:13px 14px;}
+.detail-name{font-size:1.05rem;font-weight:bold;margin-bottom:3px;}
+.detail-era-row{font-size:.73rem;color:#8a7a60;font-style:italic;margin-bottom:8px;}
+.detail-desc{font-size:.8rem;line-height:1.55;font-family:Arial,sans-serif;color:#3c3020;margin-bottom:8px;}
+.detail-link{font-size:.75rem;color:#2a5a8a;font-family:Arial,sans-serif;text-decoration:none;display:block;margin-bottom:8px;}
+.detail-link:hover{text-decoration:underline;}
+/* Gallery */
+.gallery-wrap{position:relative;background:#1a1a1a;}
+.gallery-img{width:100%;max-height:180px;object-fit:cover;display:block;}
+.gallery-empty{height:80px;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#8a7a60;font-family:Arial,sans-serif;}
+.gal-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;padding:6px 10px;cursor:pointer;font-size:1.1rem;line-height:1;border-radius:3px;}
+.gal-btn:hover{background:rgba(0,0,0,.75);}
+.gal-prev{left:5px;}.gal-next{right:5px;}
+.gal-counter{position:absolute;bottom:5px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:.68rem;padding:2px 7px;border-radius:10px;font-family:Arial,sans-serif;}
+.add-photo-row{display:flex;gap:5px;padding:6px 10px;background:#f0ebe0;border-bottom:1px solid #d4c9b0;}
+.add-photo-row input{flex:1;padding:4px 8px;border:1px solid #c0b090;border-radius:3px;font-family:Arial,sans-serif;font-size:.76rem;}
+.add-photo-row button{padding:4px 10px;background:#3a5a7a;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:.74rem;font-family:Arial,sans-serif;}
+/* Comments */
+.comments-section{padding:13px 14px;border-top:1px solid #d4c9b0;}
+.comments-header{font-size:.78rem;font-weight:bold;margin-bottom:10px;color:#4a3a28;}
+.comment-item{padding:8px 0;border-bottom:1px solid #e8e0d0;}
+.comment-item:last-child{border-bottom:none;}
+.comment-meta{font-size:.69rem;color:#7a6a50;font-family:Arial,sans-serif;margin-bottom:3px;}
+.comment-meta strong{color:#4a3a28;}
+.comment-text{font-size:.77rem;font-family:Arial,sans-serif;line-height:1.45;color:#3c3020;}
+.comment-photo{width:100%;max-height:90px;object-fit:cover;border-radius:3px;margin-top:5px;}
+.add-comment-form{background:#f0ebe0;border-radius:4px;padding:10px;margin-top:10px;}
+.add-comment-form label{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:#6a5a40;margin-bottom:2px;}
+.add-comment-form input,.add-comment-form textarea{width:100%;padding:5px 8px;border:1px solid #c0b090;border-radius:3px;font-family:Arial,sans-serif;font-size:.77rem;margin-bottom:6px;background:#fff;outline:none;}
+.add-comment-form textarea{resize:vertical;min-height:55px;}
+.add-comment-form button{padding:6px 14px;background:#2c2416;color:#f5f0e8;border:none;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:.8rem;}
+.no-comments{font-size:.76rem;color:#8a7a60;font-family:Arial,sans-serif;font-style:italic;margin-bottom:8px;}
+
+/* ── MAP ── */
+#mapWrap{flex:1;position:relative;}
+#map{width:100%;height:100%;}
+.leaflet-container.map-picking,.leaflet-container.map-picking .leaflet-interactive{cursor:crosshair!important;}
+
+/* ── LOCATE ME CONTROL ── */
+.locate-control{background:#fff;border-radius:4px;box-shadow:0 1px 5px rgba(0,0,0,.3);}
+.locate-control button{width:34px;height:34px;border:none;background:transparent;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .15s;}
+.locate-control button:hover{background:#f0f0f0;}
+.locate-control button.active{background:#e8f0fe;color:#1a73e8;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(66,133,244,.5);}70%{box-shadow:0 0 0 14px rgba(66,133,244,0);}100%{box-shadow:0 0 0 0 rgba(66,133,244,0);}}
+.locate-dot{width:14px;height:14px;background:#4285f4;border:2.5px solid #fff;border-radius:50%;box-shadow:0 0 4px rgba(0,0,0,.3);animation:pulse 2s infinite;}
+
+/* ── NEARBY PANEL ── */
+#nearbyPanel{display:none;position:absolute;top:10px;right:50px;width:230px;background:rgba(255,255,255,.97);border:1px solid #c8b090;border-radius:6px;z-index:1000;max-height:380px;overflow-y:auto;box-shadow:0 3px 12px rgba(0,0,0,.18);}
+.nearby-header{padding:8px 10px;background:#f0ebe0;border-bottom:1px solid #d4c9b0;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:1;}
+.nearby-header strong{font-size:.78rem;flex:1;}
+.radius-btns{display:flex;gap:3px;}
+.rad-btn{padding:2px 6px;font-size:.67rem;font-family:Arial,sans-serif;border:1px solid #b0a080;border-radius:10px;background:#fff;cursor:pointer;}
+.rad-btn.active{background:#2c2416;color:#fff;border-color:#2c2416;}
+.close-nearby{background:none;border:none;cursor:pointer;font-size:.85rem;color:#8a7a60;}
+.close-nearby:hover{color:#c03020;}
+.nearby-era-group{padding:6px 10px 2px;}
+.nearby-era-label{font-size:.67rem;font-weight:bold;color:#6a5a40;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.nearby-site-row{display:flex;justify-content:space-between;padding:3px 0;cursor:pointer;border-radius:2px;}
+.nearby-site-row:hover{background:#f0ebe0;}
+.nearby-site-name{font-size:.74rem;font-family:Arial,sans-serif;color:#2c2416;}
+.nearby-site-dist{font-size:.68rem;color:#8a7a60;font-family:Arial,sans-serif;flex-shrink:0;margin-left:6px;}
+.nearby-empty{padding:12px 10px;font-size:.76rem;color:#8a7a60;font-family:Arial,sans-serif;font-style:italic;}
+
+/* ── WALK INFO BAR ── */
+#walkInfoBar{display:none;position:absolute;bottom:22px;left:10px;background:rgba(255,255,255,.97);border:1px solid #c8b090;border-radius:5px;padding:8px 32px 8px 12px;z-index:1000;font-family:Arial,sans-serif;font-size:.78rem;color:#2c2416;box-shadow:0 2px 8px rgba(0,0,0,.15);max-width:410px;}
+#walkInfoBar strong{font-family:Georgia,serif;font-size:.85rem;display:block;margin-bottom:3px;}
+.walk-bar-stats{display:flex;gap:12px;color:#6a5a40;font-size:.74rem;flex-wrap:wrap;}
+.walk-bar-btns{display:flex;gap:6px;margin-top:7px;}
+.walk-bar-btn{padding:4px 10px;font-size:.72rem;font-family:Arial,sans-serif;border:1px solid #b0a080;border-radius:3px;cursor:pointer;background:#f5f0e8;color:#4a3a28;}
+.walk-bar-btn:hover{background:#e0d8c8;}
+.close-bar{position:absolute;top:6px;right:8px;background:none;border:none;cursor:pointer;font-size:.85rem;color:#8a7a60;}
+.close-bar:hover{color:#c03020;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(10px);background:#2c2416;color:#f5f0e8;padding:7px 20px;border-radius:20px;font-family:Arial,sans-serif;font-size:.8rem;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── POPUPS ── */
+.leaflet-popup-content-wrapper{border-radius:4px;font-family:Georgia,serif;}
+.popup-img{width:100%;max-height:105px;object-fit:cover;border-radius:3px;margin-bottom:6px;display:block;}
+.popup-title{font-size:.94rem;font-weight:bold;margin-bottom:2px;color:#2c2416;}
+.popup-era{font-size:.7rem;color:#8a7a60;font-style:italic;margin-bottom:5px;}
+.popup-desc{font-size:.77rem;line-height:1.48;color:#3c3020;font-family:Arial,sans-serif;max-width:210px;}
+.popup-badge{margin-top:6px;}
+.popup-link{display:block;margin-top:6px;font-size:.72rem;color:#2a5a8a;font-family:Arial,sans-serif;text-decoration:none;}
+.popup-link:hover{text-decoration:underline;}
+.popup-actions{display:flex;gap:5px;margin-top:7px;}
+.popup-btn{padding:3px 9px;font-size:.69rem;font-family:Arial,sans-serif;border:1px solid #b0a080;border-radius:3px;cursor:pointer;background:#f5f0e8;color:#4a3a28;}
+.popup-btn:hover{background:#e0d8c8;}
+
+/* ── WAR SECTION ── */
+.war-hero{background:linear-gradient(150deg,#1a1a2e,#3a2a0a);color:#f5d090;padding:16px 14px 12px;text-align:center;flex-shrink:0;position:relative;}
+.war-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");pointer-events:none;}
+.war-hero h2{font-size:1rem;letter-spacing:.08em;margin-bottom:2px;position:relative;}
+.war-hero p{font-size:.7rem;opacity:.7;font-style:italic;font-family:Arial,sans-serif;position:relative;}
+.war-sub-nav{display:flex;flex-shrink:0;border-bottom:2px solid #3a3020;background:#2a2010;}
+.war-sub-btn{flex:1;padding:9px 4px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.68rem;color:#b0a070;letter-spacing:.02em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;line-height:1.2;}
+.war-sub-btn:hover{color:#f5d090;background:#3a3020;}
+.war-sub-btn.active{color:#f5d090;border-bottom-color:#f5d090;font-weight:bold;}
+.war-period{display:none;flex-direction:column;flex:1;overflow-y:auto;}
+.war-period.active{display:flex;}
+.war-info-box{padding:13px 14px;background:#f5efe0;border-bottom:1px solid #d4c9b0;}
+.war-info-box h3{font-size:.88rem;margin-bottom:6px;color:#2c1a08;}
+.war-info-box p{font-size:.76rem;font-family:Arial,sans-serif;line-height:1.5;color:#3c2a18;margin-bottom:7px;}
+.war-info-box a{color:#2a5a8a;font-size:.74rem;font-family:Arial,sans-serif;}
+.war-sites-list{padding:8px 14px;background:#f0ebe0;border-bottom:1px solid #d4c9b0;flex-shrink:0;}
+.war-sites-list h4{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:#7a6040;margin-bottom:5px;}
+.war-site-pill{display:inline-block;padding:3px 10px;margin:2px 3px 2px 0;border-radius:12px;font-size:.69rem;font-family:Arial,sans-serif;cursor:pointer;border:1px solid #c0a060;background:#faf0d8;color:#4a3010;transition:all .15s;}
+.war-site-pill:hover{background:#2c2416;color:#f5d090;border-color:#2c2416;}
+.war-site-pill.ww1{border-color:#6a8040;background:#e8f0d8;color:#2a3a10;}
+.war-site-pill.ww2{border-color:#6a4040;background:#f0e0d8;color:#3a1a10;}
+.war-site-pill.heroes{border-color:#4060a0;background:#d8e0f0;color:#102040;}
+.war-map-note{margin:10px 14px;padding:8px 10px;background:#2a2010;color:#f5d090;border-radius:4px;font-size:.72rem;font-family:Arial,sans-serif;line-height:1.4;}
+.war-map-note strong{display:block;margin-bottom:3px;}
+/* Memories */
+.add-btn-war{background:#1a1a2e;}.add-btn-war:hover{background:#2a2a3e;}.add-btn-war .icon{background:#8a7a50;}
+.memory-card{padding:11px 14px;border-bottom:1px solid #e8e0d0;border-left:3px solid #8a7a50;}
+.memory-card:hover{background:#f0ebe0;}
+.memory-name{font-size:.85rem;font-weight:bold;color:#2c1a08;}
+.memory-meta{font-size:.7rem;color:#8a6a40;font-family:Arial,sans-serif;margin:2px 0 5px;}
+.memory-text{font-size:.76rem;font-family:Arial,sans-serif;line-height:1.45;color:#3c2a18;}
+/* Honour Board */
+.honour-board-header{background:linear-gradient(135deg,#1a1a2e,#2a1a00);color:#f5d090;padding:14px 14px 10px;text-align:center;flex-shrink:0;}
+.honour-board-header h3{font-size:.95rem;letter-spacing:.08em;margin-bottom:2px;}
+.honour-board-header p{font-size:.7rem;opacity:.7;font-family:Arial,sans-serif;font-style:italic;}
+.honour-card{padding:13px 14px;border-bottom:1px solid #d8caa0;background:#fdf8ee;position:relative;}
+.honour-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--branch-col,#8a8a8a);}
+.honour-name{font-size:.95rem;font-weight:bold;color:#1a1000;letter-spacing:.02em;}
+.honour-rank{font-size:.74rem;color:#6a5020;font-family:Arial,sans-serif;margin:2px 0;}
+.honour-years{font-size:.7rem;color:#8a7040;font-family:Arial,sans-serif;margin-bottom:6px;}
+.honour-story{font-size:.77rem;font-family:Arial,sans-serif;line-height:1.48;color:#2a1a00;}
+.honour-photo{width:60px;height:60px;object-fit:cover;border-radius:3px;float:right;margin:0 0 6px 10px;border:2px solid #c8b080;}
+.honour-branch-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-family:Arial,sans-serif;font-weight:bold;margin-bottom:6px;color:#fff;}
+.branch-army{background:#4a6a2a;}.branch-raf{background:#2a4a8a;}.branch-navy{background:#0a2a5a;}.branch-merchant{background:#2a6a6a;}.branch-home{background:#5a2a6a;}.branch-civilian{background:#6a3a1a;}.branch-womens{background:#7a2a5a;}.branch-other{background:#5a5a5a;}
+.honour-submitter{font-size:.66rem;color:#9a8a60;font-family:Arial,sans-serif;margin-top:5px;font-style:italic;}
+.honour-expand{font-size:.69rem;color:#2a5a8a;font-family:Arial,sans-serif;cursor:pointer;text-decoration:underline;display:block;margin-top:3px;}
+/* Map war mode */
+#map.war-sepia{filter:sepia(.75) saturate(.5) brightness(.88) contrast(1.05);}
+#map.war-heroes{filter:none;}
+/* War marker */
+@keyframes warPulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
+/* ── PRINT ── */
+@media print{
+  .no-print{display:none!important;}
+  body{background:#fff;color:#000;}
+  .print-content{display:block!important;}
+}
+.print-content{display:none;}
+
+/* ── FOOTER ── */
+footer{font-size:.66rem;text-align:center;padding:5px;color:#8a7a60;background:#f0ebe0;border-top:1px solid #d4c9b0;font-family:Arial,sans-serif;flex-shrink:0;}
+footer a{color:#5a7a5a;}
+
+@media(max-width:640px){
+  .layout{flex-direction:column;}
+  #sidebar{width:100%;height:260px;border-right:none;border-bottom:1px solid #d4c9b0;}
+  #nearbyPanel{top:auto;bottom:80px;right:10px;left:10px;width:auto;}
+  #walkInfoBar{left:5px;right:5px;max-width:none;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Historic Warrington</h1>
+  <span>Cheshire, England</span>
+  <div class="header-spacer"></div>
+</header>
+
+<div id="toast"></div>
+
+<div class="layout">
+<div id="sidebar">
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-sites-btn">🗺 Sites</button>
+    <button class="tab-btn" id="tab-walks-btn">👣 Walks</button>
+    <button class="tab-btn" id="tab-stories-btn">📖 Stories</button>
+    <button class="tab-btn" id="tab-war-btn">✈️ War</button>
+  </div>
+
+  <!-- ══ SITES TAB ══ -->
+  <div class="tab-content" id="tab-sites">
+    <div class="search-bar">
+      <input class="search-input" id="siteSearch" type="search" placeholder="Search sites by name, keyword…" />
+      <select class="area-select" id="areaFilter">
+        <option value="">All areas of Warrington</option>
+      </select>
+      <div class="area-desc hidden" id="areaDesc">
+        <span id="areaDescText"></span>
+        <span class="area-stories-link" id="areaStoriesLink"></span>
+      </div>
+    </div>
+
+    <button class="add-btn add-btn-site" id="toggleAddSite">
+      <span class="icon">★</span> Add a historic site
+    </button>
+    <div class="form-panel" id="addSitePanel">
+      <div class="form-group"><label>Site name *</label><input type="text" id="f-name" placeholder="e.g. Warrington Town Hall"/></div>
+      <div class="form-group"><label>Era / date</label><input type="text" id="f-era" placeholder="e.g. 1750, Medieval, Victorian"/></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="f-category">
+            <option>Civic</option><option>Religious</option><option>Industrial</option>
+            <option>Manor</option><option>Country House</option><option>Village Heritage</option>
+            <option>Historic Inn</option><option>Education</option><option>Prehistoric</option>
+            <option>Battlefield</option><option>Canal Heritage</option><option>Memorial</option>
+            <option value="__custom__">Other…</option>
+          </select>
+          <input type="text" id="f-category-custom" placeholder="Custom category" style="display:none;margin-top:4px;"/>
+        </div>
+        <div class="form-group">
+          <label>Grade</label>
+          <select id="f-grade">
+            <option value="other" selected>Notable</option>
+            <option value="II">Grade II</option><option value="II*">Grade II*</option><option value="I">Grade I</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Area of Warrington</label>
+        <select id="f-area"><option value="">— Select area —</option></select>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea id="f-desc" placeholder="Brief history and significance…"></textarea></div>
+      <div class="form-group">
+        <label>Photos (URLs)</label>
+        <div id="photoEntries"><div class="photo-entry"><input type="url" placeholder="https://…"/></div></div>
+        <span class="add-photo-link" id="addPhotoEntryBtn">+ Add another photo</span>
+        <p class="form-hint">Paste public image URLs, e.g. Wikimedia Commons</p>
+      </div>
+      <div class="form-group">
+        <label>Info link</label>
+        <input type="url" id="f-link-url" placeholder="https://historicengland.org.uk/…"/>
+        <input type="text" id="f-link-label" placeholder="Link label" style="margin-top:4px;"/>
+      </div>
+      <div class="form-group">
+        <label>Map location *</label>
+        <div class="form-row"><input type="number" id="f-lat" placeholder="Latitude" step="any"/><input type="number" id="f-lng" placeholder="Longitude" step="any"/></div>
+        <button class="map-action-btn btn-pick" id="pickMapBtn">📍 Click map to set location</button>
+        <div class="hint-box" id="pickHint">Click anywhere on the map to place a pin.</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-submit" id="submitSiteBtn">Add to map</button>
+        <button class="btn-cancel" id="cancelAddSite">Cancel</button>
+      </div>
+      <div class="form-error" id="siteFormError"></div>
+    </div>
+
+    <div class="filter-bar">
+      <label>Filter by category</label>
+      <div class="filter-buttons" id="filterButtons"></div>
+    </div>
+    <div class="list-header" id="siteCount">Sites — click to view details</div>
+    <div id="siteList"></div>
+  </div>
+
+  <!-- ══ WALKS TAB ══ -->
+  <div class="tab-content hidden" id="tab-walks" style="display:none;">
+    <div class="walks-hero"><h2>Footsteps into the Past</h2><p>Heritage walks around Warrington</p></div>
+    <button class="add-btn add-btn-walk" id="toggleAddWalk"><span class="icon">+</span> Add a heritage walk</button>
+    <div class="form-panel" id="addWalkPanel">
+      <div class="form-group"><label>Walk name *</label><input type="text" id="w-name" placeholder="e.g. Town Centre Heritage Walk"/></div>
+      <div class="form-group"><label>Description</label><textarea id="w-desc" placeholder="What will walkers see and experience?"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Duration</label><input type="text" id="w-duration" placeholder="e.g. 1h 30min"/></div>
+        <div class="form-group"><label>Difficulty</label><select id="w-difficulty"><option value="easy">Easy</option><option value="moderate">Moderate</option><option value="challenging">Challenging</option></select></div>
+      </div>
+      <div class="form-group"><label>Cover photo URL</label><input type="url" id="w-photo" placeholder="https://…"/><p class="form-hint">Paste a public image URL</p></div>
+      <div class="form-group">
+        <label>Route — draw on map *</label>
+        <div class="draw-info" id="drawInfo">Click "Start drawing" then click the map to add waypoints.</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="map-action-btn btn-draw" id="startDrawBtn" style="flex:1;">✏️ Start drawing</button>
+          <button class="map-action-btn btn-undo" id="undoPointBtn" disabled>↩ Undo</button>
+          <button class="map-action-btn btn-clear" id="clearRouteBtn" disabled>✕ Clear</button>
+        </div>
+        <div class="hint-box" id="drawHint">Click the map to add waypoints. Click "Stop" when done.</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-submit" id="submitWalkBtn">Save walk</button>
+        <button class="btn-cancel" id="cancelAddWalk">Cancel</button>
+      </div>
+      <div class="form-error" id="walkFormError"></div>
+    </div>
+    <div class="list-header">Saved walks — click to view on map</div>
+    <div id="walkList"></div>
+  </div>
+
+  <!-- ══ STORIES TAB ══ -->
+  <div class="tab-content hidden" id="tab-stories" style="display:none;">
+    <div class="stories-hero"><h2>Local Stories</h2><p>Memories &amp; history from Warrington's communities</p></div>
+    <button class="add-btn add-btn-story" id="toggleAddStory"><span class="icon">+</span> Share a local story</button>
+    <div class="form-panel" id="addStoryPanel">
+      <div class="form-group"><label>Story title *</label><input type="text" id="s-title" placeholder="e.g. The old mill on Orford Lane"/></div>
+      <div class="form-group"><label>Area of Warrington *</label><select id="s-area"><option value="">— Select area —</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label>Your name</label><input type="text" id="s-author" placeholder="Anonymous"/></div>
+        <div class="form-group"><label>Period / year</label><input type="text" id="s-year" placeholder="e.g. 1960s, WWII"/></div>
+      </div>
+      <div class="form-group"><label>Your story *</label><textarea id="s-text" placeholder="Share your memory or knowledge of this place…" style="min-height:90px;"></textarea></div>
+      <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="s-photo" placeholder="https://…"/></div>
+      <div class="form-actions">
+        <button class="btn-submit" id="submitStoryBtn">Post story</button>
+        <button class="btn-cancel" id="cancelAddStory">Cancel</button>
+      </div>
+      <div class="form-error" id="storyFormError"></div>
+    </div>
+    <div style="padding:7px 13px;border-bottom:1px solid #d4c9b0;background:#f0ebe0;flex-shrink:0;">
+      <select class="area-select" id="storyAreaFilter" style="width:100%;"><option value="">All areas</option></select>
+    </div>
+    <div class="list-header" id="storyCount">Community stories</div>
+    <div id="storyList"></div>
+  </div>
+
+  <!-- ══ WAR TAB ══ -->
+  <div class="tab-content hidden" id="tab-war" style="display:none;">
+    <div class="war-hero">
+      <h2>⚔️ Warrington at War</h2>
+      <p>Honouring those who served, sacrificed &amp; survived</p>
+    </div>
+    <div class="war-sub-nav">
+      <button class="war-sub-btn active" data-war="ww1">🪖 WW1<br><span style="font-size:.6rem;opacity:.7;">1914–1918</span></button>
+      <button class="war-sub-btn" data-war="ww2">✈️ WW2<br><span style="font-size:.6rem;opacity:.7;">1939–1945</span></button>
+      <button class="war-sub-btn" data-war="heroes">🎖 Heroes<br><span style="font-size:.6rem;opacity:.7;">Live On</span></button>
+    </div>
+
+    <!-- WW1 -->
+    <div class="war-period active" id="war-ww1">
+      <div class="war-info-box">
+        <h3>Warrington 1914–1918</h3>
+        <p>Warrington made a profound contribution to the First World War. Its wire and wire-rope works — particularly Rylands Brothers — produced vast quantities of barbed wire that stretched across the Western Front. The town's chemical and rubber industries turned to munitions and equipment manufacture. Thousands of local men enlisted in the Warrington Pals battalion and other regiments, many never to return.</p>
+        <p>The Warrington Cenotaph in Palmyra Square records the sacrifice of over 1,400 men and women. Winwick Hospital served as a military auxiliary hospital. The town's railways became vital arteries for troops and supplies heading south to embarkation ports.</p>
+        <a href="https://www.warrington.gov.uk/our-heritage" target="_blank">Warrington Heritage →</a>
+      </div>
+      <div class="war-map-note"><strong>🗺 WW1 Map View</strong>The map is showing a historical view — sites are shown as they existed in the 1914–1918 era. Click a site to learn more.</div>
+      <div class="war-sites-list">
+        <h4>Key WW1 Sites — click to locate</h4>
+        <div id="ww1Pills"></div>
+      </div>
+      <button class="add-btn add-btn-war" id="toggleAddWw1Memory"><span class="icon">+</span> Add a WW1 memory</button>
+      <div class="form-panel" id="addWw1MemoryPanel">
+        <div class="form-group"><label>Person / place / story title *</label><input type="text" id="wm1-title" placeholder="e.g. My great-grandfather at the Somme"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Your name</label><input type="text" id="wm1-author" placeholder="Anonymous"/></div>
+          <div class="form-group"><label>Connection (e.g. grandson)</label><input type="text" id="wm1-connection" placeholder=""/></div>
+        </div>
+        <div class="form-group"><label>Your memory / story *</label><textarea id="wm1-text" placeholder="Share what you know…" style="min-height:80px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="wm1-photo" placeholder="https://…"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" id="submitWw1Btn">Share memory</button>
+          <button class="btn-cancel" id="cancelWw1Btn">Cancel</button>
+        </div>
+        <div class="form-error" id="ww1MemErr"></div>
+      </div>
+      <div class="list-header" id="ww1MemCount">WW1 community memories</div>
+      <div id="ww1MemList"></div>
+    </div>
+
+    <!-- WW2 -->
+    <div class="war-period" id="war-ww2">
+      <div class="war-info-box">
+        <h3>Warrington 1939–1945</h3>
+        <p>Warrington was at the heart of Britain's war effort. RAF Burtonwood became one of the largest US Air Force bases in Europe — some 18,000 American servicemen were stationed here, with the base overhauling and supplying aircraft across the theatre of war. It was a town-within-a-town and transformed local life.</p>
+        <p>The Risley Royal Ordnance Factory, built rapidly from 1939, employed tens of thousands — mostly women — producing shells, cartridges and explosives. Crosfields chemical works contributed to war production. Bank Quay railway station was a vital supply hub. Warrington suffered bombing raids, and its people endured rationing, evacuees, and the constant anxiety of war.</p>
+        <a href="https://www.rafburtonwood.com/" target="_blank">RAF Burtonwood Heritage Centre →</a>
+      </div>
+      <div class="war-map-note"><strong>🗺 WW2 Map View</strong>Map showing the Warrington of 1939–1945. The airfields, ordnance works and military installations that defined the town in wartime are marked.</div>
+      <div class="war-sites-list">
+        <h4>Key WW2 Sites — click to locate</h4>
+        <div id="ww2Pills"></div>
+      </div>
+      <button class="add-btn add-btn-war" id="toggleAddWw2Memory"><span class="icon">+</span> Add a WW2 memory</button>
+      <div class="form-panel" id="addWw2MemoryPanel">
+        <div class="form-group"><label>Person / place / story title *</label><input type="text" id="wm2-title" placeholder="e.g. Mum working at Risley Ordnance Factory"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Your name</label><input type="text" id="wm2-author" placeholder="Anonymous"/></div>
+          <div class="form-group"><label>Connection</label><input type="text" id="wm2-connection" placeholder="e.g. daughter"/></div>
+        </div>
+        <div class="form-group"><label>Your memory / story *</label><textarea id="wm2-text" placeholder="Share what you know…" style="min-height:80px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="wm2-photo" placeholder="https://…"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" id="submitWw2Btn">Share memory</button>
+          <button class="btn-cancel" id="cancelWw2Btn">Cancel</button>
+        </div>
+        <div class="form-error" id="ww2MemErr"></div>
+      </div>
+      <div class="list-header" id="ww2MemCount">WW2 community memories</div>
+      <div id="ww2MemList"></div>
+    </div>
+
+    <!-- HEROES -->
+    <div class="war-period" id="war-heroes">
+      <div class="war-info-box" style="background:#0e1828;color:#b8d0f0;border-color:#2a3a50;">
+        <h3 style="color:#f0d870;">🎖 Heroes Live On Through Us</h3>
+        <p style="color:#a0b8d0;">The map shows modern-day Warrington — highlighting war memorials, museums, preserved buildings and places where you can still feel the presence of those who served. Visit them, remember them, and add their stories to the Honour Board below.</p>
+        <a href="https://www.rafburtonwood.com/" target="_blank" style="color:#70a0e0;">RAF Burtonwood Heritage Centre →</a>
+      </div>
+      <div class="war-sites-list" style="background:#0e1828;border-color:#2a3a50;">
+        <h4 style="color:#8090a0;">Places to visit today — click to locate</h4>
+        <div id="heroPills"></div>
+      </div>
+      <div class="honour-board-header">
+        <h3>🏅 Honour Board</h3>
+        <p>A commemorative collection of Warrington's war heroes — soldiers, sailors, airmen, and civilians who gave everything</p>
+      </div>
+      <button class="add-btn" style="background:#1a1a2e;" id="toggleAddHonour"><span class="icon" style="background:#8a7a30;">+</span> Add to the Honour Board</button>
+      <div class="form-panel" id="addHonourPanel" style="background:#f8f4e8;border-color:#c8a840;">
+        <div class="form-group"><label>Full name *</label><input type="text" id="h-name" placeholder="e.g. Private Thomas Ashton"/></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Service branch *</label>
+            <select id="h-branch">
+              <option value="army">Army</option>
+              <option value="raf">Royal Air Force</option>
+              <option value="navy">Royal Navy</option>
+              <option value="merchant">Merchant Navy</option>
+              <option value="home">Home Guard</option>
+              <option value="womens">Women's Services</option>
+              <option value="civilian">Civilian (War Service)</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Rank / Role</label><input type="text" id="h-rank" placeholder="e.g. Sergeant Pilot"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>War</label>
+            <select id="h-war"><option value="WW1">WW1 (1914–18)</option><option value="WW2">WW2 (1939–45)</option><option value="other">Other conflict</option></select>
+          </div>
+          <div class="form-group"><label>Years of service</label><input type="text" id="h-years" placeholder="e.g. 1940–1944"/></div>
+        </div>
+        <div class="form-group"><label>Their story *</label><textarea id="h-story" placeholder="Tell us who they were, what they did, and what they meant…" style="min-height:90px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="h-photo" placeholder="https://…"/></div>
+        <div class="form-group"><label>Submitted by</label><input type="text" id="h-submitter" placeholder="e.g. their granddaughter"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" style="background:#2a1a00;color:#f5d090;" id="submitHonourBtn">Add to Honour Board</button>
+          <button class="btn-cancel" id="cancelHonourBtn">Cancel</button>
+        </div>
+        <div class="form-error" id="honourFormErr"></div>
+      </div>
+      <div class="list-header" id="honourCount" style="background:#1a1a2e;color:#b0a070;border-color:#3a3020;">Honour Board</div>
+      <div id="honourList"></div>
+    </div>
+  </div>
+
+  <!-- ══ SITE DETAIL PANEL ══ -->
+  <div id="siteDetailPanel">
+    <div class="detail-back-bar">
+      <button id="detailBackBtn">← Back</button>
+      <div class="spacer"></div>
+      <button id="detailShareBtn">🔗 Share</button>
+      <button id="detailMapBtn">🗺 Map</button>
+    </div>
+    <div class="gallery-wrap" id="detailGalleryWrap">
+      <div class="gallery-empty" id="galleryEmpty">No photos yet — add one below</div>
+      <img class="gallery-img" id="detailImg" style="display:none;" alt="Site photo"/>
+      <button class="gal-btn gal-prev" id="galPrev" style="display:none;">‹</button>
+      <button class="gal-btn gal-next" id="galNext" style="display:none;">›</button>
+      <span class="gal-counter" id="galCounter" style="display:none;"></span>
+    </div>
+    <div class="add-photo-row">
+      <input type="url" id="newPhotoInput" placeholder="Add a photo URL…"/>
+      <button id="addPhotoBtn">Add photo</button>
+    </div>
+    <div class="detail-info" id="detailInfo"></div>
+    <div class="comments-section">
+      <div class="comments-header">💬 Comments &amp; memories</div>
+      <div id="commentsList"><p class="no-comments">No comments yet. Be the first to share a memory!</p></div>
+      <div class="add-comment-form">
+        <label>Your name</label>
+        <input type="text" id="commentAuthor" placeholder="Anonymous"/>
+        <label>Comment</label>
+        <textarea id="commentText" placeholder="Share your memories, photos, or knowledge about this site…"></textarea>
+        <label>Photo URL (optional)</label>
+        <input type="url" id="commentPhotoUrl" placeholder="https://…"/>
+        <button id="submitCommentBtn">Post comment</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /sidebar -->
+
+<div id="mapWrap">
+  <div id="map"></div>
+  <div id="nearbyPanel">
+    <div class="nearby-header">
+      <strong id="nearbyTitle">Nearby sites</strong>
+      <div class="radius-btns">
+        <button class="rad-btn active" data-r="500">500m</button>
+        <button class="rad-btn" data-r="1000">1km</button>
+        <button class="rad-btn" data-r="2000">2km</button>
+      </div>
+      <button class="close-nearby" id="closeNearby">✕</button>
+    </div>
+    <div id="nearbyList"></div>
+  </div>
+  <div id="walkInfoBar">
+    <button class="close-bar" id="closeWalkBar">✕</button>
+    <strong id="walkBarName"></strong>
+    <div class="walk-bar-stats">
+      <span id="walkBarDist"></span>
+      <span id="walkBarDur"></span>
+      <span id="walkBarDiff"></span>
+    </div>
+    <div class="walk-bar-btns">
+      <button class="walk-bar-btn" id="printWalkBtn">🖨 Print walk</button>
+    </div>
+  </div>
+</div>
+</div><!-- /layout -->
+
+<footer class="no-print">
+  Map tiles © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &nbsp;|&nbsp;
+  Heritage data: <a href="https://historicengland.org.uk/local/locations/warrington/" target="_blank">Historic England</a> &amp;
+  <a href="https://www.warrington.gov.uk/our-heritage" target="_blank">Warrington Borough Council</a>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function haversineM(a,b){const R=6371000,dL=(b[0]-a[0])*Math.PI/180,dl=(b[1]-a[1])*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function haversineMi(coords){if(coords.length<2)return 0;let t=0;for(let i=1;i<coords.length;i++)t+=haversineM(coords[i-1],coords[i]);return t/1609.34;}
+function parseEraYear(era){if(!era)return 9999;const m=era.match(/-?\d{3,4}/);return m?parseInt(m[0]):9999;}
+function eraGroup(era){const y=parseEraYear(era);if(y<0)return'⛏ Prehistoric';if(y<1066)return'🏰 Early Medieval';if(y<1540)return'🏰 Medieval';if(y<1700)return'⚔️ Tudor & Stuart';if(y<1837)return'🏛 Georgian';if(y<1914)return'🏭 Victorian & Edwardian';if(y<1950)return'📰 Early 20th Century';return'🏗 Modern';}
+function fmtDist(m){return m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+/* ════════════════════════════════════════
+   WARRINGTON AREAS
+════════════════════════════════════════ */
+const AREAS=[
+  'Town Centre','Orford','Great Sankey','Bruche','Bewsey','Lymm',
+  'Grappenhall & Thelwall','Stockton Heath','Penketh','Culcheth',
+  'Birchwood','Woolston','Padgate','Appleton','Burtonwood','Winwick',
+  'Fearnhead','Westbrook','Rixton & Glazebrook','Hatton'
+];
+
+const AREA_DESC={
+  'Town Centre':'The historic heart of Warrington, with a rich market town heritage stretching back to Roman times. Home to some of the borough\'s finest civic and religious buildings.',
+  'Orford':'A district with deep medieval roots, Orford grew from a rural township into one of Warrington\'s most storied residential areas.',
+  'Great Sankey':'A large parish west of Warrington, notable for the world\'s earliest major railway viaduct and a unique series of inscribed Travellers\' Rest stones from the 1860s.',
+  'Bruche':'A district with a proud industrial and community history, including significant wartime connections.',
+  'Bewsey':'Home to the ruins of Bewsey Old Hall, a moated medieval manor of the Boteler family, one of Warrington\'s most atmospheric heritage sites.',
+  'Lymm':'An ancient village recorded in the Domesday Book, centred on the 17th-century Lymm Cross. The village retains much of its Georgian and Victorian character.',
+  'Grappenhall & Thelwall':'Two historic villages south of Warrington, with the medieval church of St Wilfrid in Grappenhall and a fine collection of listed buildings along the Bridgewater Canal.',
+  'Stockton Heath':'A Victorian suburb that grew rapidly with the coming of the canal and railway, now home to elegant period townhouses and the Bridgewater Canal.',
+  'Penketh':'A rural township with tannery heritage, Penketh developed along the Sankey Canal in the 18th and 19th centuries.',
+  'Culcheth':'A scattered farming community that developed a distinct identity; Culcheth Hall was an important local landmark.',
+  'Birchwood':'A largely modern district built from the 1970s, but sitting on ancient moss land (Risley Moss) with significant prehistoric heritage beneath.',
+  'Woolston':'A riverside community with deep weaving and industrial heritage along the south bank of the Mersey.',
+  'Padgate':'A residential district with Victorian railway heritage; Padgate station was opened in 1837.',
+  'Appleton':'A prosperous township on the Bridgewater Canal, home to Walton Hall and a fine late-18th-century canal warehouse at Stockton Quay.',
+  'Burtonwood':'Known primarily for the Second World War US Air Force base, Burtonwood also contains the Sankey Viaduct and rich industrial heritage.',
+  'Winwick':'Home to the magnificent medieval church of St Oswald, one of Cheshire\'s finest, and the site of the 1648 Battle of Red Bank, the last major battle of the English Civil War.',
+  'Fearnhead':'A largely residential area that grew significantly in the 20th century, with older farmstead traces still visible.',
+  'Westbrook':'Home to the Sankey Viaduct area and significant industrial heritage related to the Sankey Canal, Britain\'s first true industrial canal.',
+  'Rixton & Glazebrook':'A quiet rural parish in the east of the borough, notable for its Victorian railway station on the Cheshire Lines.',
+  'Hatton':'A small rural hamlet notable for a listed K6 telephone kiosk designed by Sir Giles Gilbert Scott.'
+};
+
+/* ════════════════════════════════════════
+   BUILTIN SITES
+════════════════════════════════════════ */
+const builtinSites=[
+  {id:'b_townhall',name:'Warrington Town Hall (Bank Hall)',lat:53.3901,lng:-2.5877,era:'1750',category:'Civic',grade:'I',area:'Town Centre',description:'Designed in Palladian style, described by Pevsner as "the finest house of its date in South Lancashire." Built for the Patten family, it became the Town Hall in 1872. The Grade I listed building sits behind the famous restored Golden Gates.',photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1329667',linkLabel:'Historic England listing'},
+  {id:'b_goldengates',name:'The Golden Gates',lat:53.3899,lng:-2.5874,era:'pre-1895',category:'Civic',grade:'II',area:'Town Centre',description:'Magnificent ornate iron gates fronting the Town Hall, recently restored. A beloved landmark of Warrington and part of the Town Hall Conservation Area.',photos:[]},
+  {id:'b_sankey',name:'Sankey Viaduct',lat:53.4475,lng:-2.6508,era:'1830',category:'Industrial',grade:'II*',area:'Great Sankey',description:'Built by George Stephenson for the Liverpool and Manchester Railway, this is the world\'s earliest surviving major railway viaduct. A Grade II* landmark of international industrial heritage significance.',photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1075927',linkLabel:'Historic England listing'},
+  {id:'b_stelphin',name:"St Elphin's Church",lat:53.3908,lng:-2.5802,era:'Medieval (rebuilt 1859)',category:'Religious',grade:'I',area:'Town Centre',description:"One of Warrington's oldest churches, dedicated to St Elphin, a 7th-century Bishop of Lindisfarne. The current structure was largely rebuilt in the Victorian era but retains its historic steeple.",photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1329734',linkLabel:'Historic England listing'},
+  {id:'b_lymmcross',name:'Lymm Cross & Stocks',lat:53.3749,lng:-2.4757,era:'17th century',category:'Village Heritage',grade:'I',area:'Lymm',description:'A Grade I listed sandstone cross forming the focal point of Lymm village (recorded in the Domesday Book). The adjacent stocks, probably 17th century, were restored in 1897 and were used for punishing minor crimes.',photos:[]},
+  {id:'b_waltonhall',name:'Walton Hall',lat:53.3623,lng:-2.5456,era:'19th century',category:'Country House',grade:'II',area:'Appleton',description:'A Victorian country house set within Walton Gardens. Now used as a heritage centre and events venue, the hall and its grounds are a popular destination in south Warrington.',photos:[]},
+  {id:'b_museum',name:'Warrington Museum & Library',lat:53.3897,lng:-2.5969,era:'1857',category:'Civic',grade:'II',area:'Town Centre',description:'One of the pioneering public libraries in England. The museum holds important local history collections including natural history specimens and Roman artefacts from Wilderspool.',photos:[]},
+  {id:'b_barleymow',name:'Ye Olde Barley Mow',lat:53.3893,lng:-2.5955,era:'1561',category:'Historic Inn',grade:'other',area:'Town Centre',description:'The oldest building in Warrington town centre, dating to 1561. This black-and-white timber-framed building on a red sandstone base has survived centuries of change and is a remarkable example of Tudor architecture.',photos:[]},
+  {id:'b_bewsey',name:'Bewsey Old Hall',lat:53.3992,lng:-2.6298,era:'Medieval',category:'Manor',grade:'II*',area:'Bewsey',description:'The remains of a moated medieval manor house, seat of the Boteler family for centuries. The surviving gatehouse and moat are among Warrington\'s most evocative heritage remains, set within a nature park.',photos:[]},
+  {id:'b_academy',name:'The Old Academy',lat:53.3903,lng:-2.5930,era:'1757',category:'Education',grade:'other',area:'Town Centre',description:'Built in 1757 to train Nonconformist ministers, the Academy attracted major Enlightenment figures. Tutors included Joseph Priestley, John Aikin and Gilbert Wakefield; students included Josiah Wedgwood\'s eldest son.',photos:[]},
+  {id:'b_stmarylymm',name:"St Mary's Church, Lymm",lat:53.3763,lng:-2.4740,era:'12th century',category:'Religious',grade:'II*',area:'Lymm',description:'A parish church with Norman and medieval origins, overlooking the historic Lymm Dam. Central to the village\'s heritage and one of the oldest places of worship in the Warrington area.',photos:[]},
+  {id:'b_risley',name:'Risley Moss',lat:53.4285,lng:-2.5640,era:'Prehistoric',category:'Prehistoric',grade:'other',area:'Birchwood',description:'An ancient raised bog with prehistoric human activity. A Site of Special Scientific Interest, the moss preserves evidence of landscape and human life going back thousands of years.',photos:[]},
+  {id:'b_winwick',name:"St Oswald's Church, Winwick",lat:53.4452,lng:-2.6041,era:'Medieval',category:'Religious',grade:'I',area:'Winwick',description:'One of the finest medieval churches in the north-west, with a magnificent 14th-century tower. Legend links the site to King Oswald of Northumbria, killed in battle in AD 642. A scheduled monument of national importance.',photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1139320',linkLabel:'Historic England listing'},
+  {id:'b_redbank',name:'Battle of Red Bank (1648)',lat:53.4470,lng:-2.6080,era:'1648',category:'Battlefield',grade:'other',area:'Winwick',description:"The site of the last major battle of the English Civil War fought between King and Parliament. Oliver Cromwell's New Model Army defeated Royalist forces here on 19 August 1648, ending the Second Civil War.",photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1412878',linkLabel:'Historic England listing'},
+  {id:'b_pickbridge',name:"Pickering's Bridge, Bridgewater Canal",lat:53.3722,lng:-2.4961,era:'1770',category:'Canal Heritage',grade:'II',area:'Grappenhall & Thelwall',description:"An accommodation bridge of 1770 built by James Brindley for the Duke of Bridgewater's Canal. One of the original structures on England's first true commercial canal.",photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1457565',linkLabel:'Historic England listing'},
+  {id:'b_travellerstone',name:"Travellers' Rest Stone, Great Sankey",lat:53.3905,lng:-2.6312,era:'c.1860',category:'Village Heritage',grade:'II',area:'Great Sankey',description:'One of a remarkable series of inscribed stone seats designed c.1860 by local doctor James Kendrick for Irish harvest workers travelling on foot through Warrington. At least six survive across the borough.',photos:[],linkUrl:'https://historicengland.org.uk/listing/the-list/list-entry/1393568',linkLabel:'Historic England listing'},
+  {id:'b_stocktonquay',name:'Stockton Quay Canal Warehouse',lat:53.3672,lng:-2.5312,era:'Late 18th century',category:'Canal Heritage',grade:'II',area:'Appleton',description:'A late 18th-century canal warehouse serving the Bridgewater Canal at Stockton Quay. Now a pub and restaurant, the building retains much of its original character as a working waterway freight depot.',photos:[]},
+];
+
+/* ════════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════════ */
+const gradeLabels={'I':'Grade I','II*':'Grade II*','II':'Grade II','other':'Notable'};
+const gradeClass={'I':'badge-I','II*':'badge-II-star','II':'badge-II','other':'badge-other'};
+const catColour={'Civic':'#2c6e8a','Industrial':'#7a4a1a','Religious':'#6a2a6a','Village Heritage':'#2a6a3a','Country House':'#4a5a2a','Historic Inn':'#8a3a2a','Manor':'#4a2a6a','Education':'#2a4a6a','Prehistoric':'#5a5a2a','Battlefield':'#8a2a2a','Canal Heritage':'#2a5a6a','Memorial':'#4a4a7a'};
+const diffBadge={easy:'badge-easy',moderate:'badge-moderate',challenging:'badge-challenging'};
+
+/* ════════════════════════════════════════
+   PERSISTENCE
+════════════════════════════════════════ */
+const KEYS={sites:'warrington-user-sites-v1',walks:'warrington-user-walks-v1',stories:'warrington-stories-v1',extraPhotos:'warrington-extra-photos-v1',comments:'warrington-comments-v1'};
+function loadJ(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return[];}}
+function saveJ(k,v){localStorage.setItem(k,JSON.stringify(v));}
+
+let userSites=loadJ(KEYS.sites).map(s=>({...s,isUser:true,photos:Array.isArray(s.photos)?s.photos:(s.photo?[s.photo]:[]),id:s.id||Date.now().toString()}));
+let userWalks=loadJ(KEYS.walks);
+let userStories=loadJ(KEYS.stories);
+let extraPhotos=loadJ(KEYS.extraPhotos);  // object: {siteId:[urls]}
+let allComments=loadJ(KEYS.comments);     // [{id,siteId,author,date,text,photo}]
+
+if(!Array.isArray(extraPhotos)){extraPhotos={};}
+function getExtraPhotos(id){return extraPhotos[id]||[];}
+function addExtraPhoto(id,url){if(!extraPhotos[id])extraPhotos[id]=[];extraPhotos[id].push(url);saveJ(KEYS.extraPhotos,extraPhotos);}
+
+function allSites(){return[...builtinSites,...userSites];}
+function siteById(id){return allSites().find(s=>s.id===id);}
+
+/* ════════════════════════════════════════
+   MAP
+════════════════════════════════════════ */
+const map=L.map('map').setView([53.3950,-2.5700],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+
+/* Site icons */
+function makeSiteIcon(site){
+  const col=site.isUser?'#b8860b':(catColour[site.category]||'#555');
+  const inner=site.isUser?`<text x="12" y="17" text-anchor="middle" font-size="11" fill="#fff" font-family="Arial" font-weight="bold">★</text>`:`<circle cx="12" cy="12" r="5" fill="#fff" fill-opacity="0.85"/>`;
+  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z" fill="${col}" stroke="#fff" stroke-width="1.5"/>${inner}</svg>`,className:'',iconSize:[24,36],iconAnchor:[12,36],popupAnchor:[0,-34]});
+}
+
+function sitePopupHTML(site){
+  const photos=getAllPhotos(site);
+  let h='';
+  if(photos.length)h+=`<img class="popup-img" src="${esc(photos[0])}" alt="" onerror="this.style.display='none'"/>`;
+  h+=`<div class="popup-title">${esc(site.name)}</div>`;
+  h+=`<div class="popup-era">${esc(site.era||'')}${site.era&&site.category?' · ':''}${esc(site.category)}${site.area?' · '+esc(site.area):''}`;
+  h+=`</div><div class="popup-desc">${esc(site.description).slice(0,110)}${site.description.length>110?'…':''}</div>`;
+  h+=`<div class="popup-badge"><span class="badge ${gradeClass[site.grade]||'badge-other'}">${gradeLabels[site.grade]||'Notable'}</span>`;
+  if(site.isUser)h+=` <span class="badge badge-user">★</span>`;
+  h+=`</div>`;
+  h+=`<div class="popup-actions"><button class="popup-btn" onclick="openDetail('${esc(site.id)}')">📋 Full details</button></div>`;
+  return h;
+}
+
+function getAllPhotos(site){
+  const own=site.photos||[];
+  const extra=getExtraPhotos(site.id);
+  return[...own,...extra];
+}
+
+let siteMarkers=[];
+let activeFilters=new Set();
+
+function addSiteMarker(site){
+  const m=L.marker([site.lat,site.lng],{icon:makeSiteIcon(site)});
+  m.bindPopup(sitePopupHTML(site),{maxWidth:260});
+  if(activeFilters.has(site.category))m.addTo(map);
+  siteMarkers.push({site,marker:m});
+  return m;
+}
+
+function refreshMarkerPopup(site){
+  const entry=siteMarkers.find(m=>m.site===site||m.site.id===site.id);
+  if(entry)entry.marker.setPopupContent(sitePopupHTML(site));
+}
+
+/* Walk layers */
+const walkLayers={};
+let selectedWalkId=null;
+
+function addWalkLayer(walk){
+  if(!walk.waypoints||walk.waypoints.length<2)return;
+  const pl=L.polyline(walk.waypoints,{color:'#c03020',dashArray:'10 6',weight:3,opacity:.45}).addTo(map);
+  pl.on('click',()=>selectWalk(walk.id));
+  walkLayers[walk.id]={polyline:pl,startM:null,endM:null};
+}
+
+function selectWalk(id){
+  if(selectedWalkId&&walkLayers[selectedWalkId]){
+    const p=walkLayers[selectedWalkId];
+    p.polyline.setStyle({opacity:.45,weight:3});
+    if(p.startM){map.removeLayer(p.startM);p.startM=null;}
+    if(p.endM){map.removeLayer(p.endM);p.endM=null;}
+  }
+  selectedWalkId=id;
+  const walk=userWalks.find(w=>w.id===id);
+  if(!walk||!walkLayers[id])return;
+  const l=walkLayers[id];
+  l.polyline.setStyle({opacity:1,weight:5});
+  const pts=walk.waypoints;
+  l.startM=L.circleMarker(pts[0],{radius:8,color:'#1a6a1a',fillColor:'#3a9a3a',fillOpacity:1,weight:2}).bindTooltip('Start').addTo(map);
+  l.endM=L.circleMarker(pts[pts.length-1],{radius:8,color:'#8a1a1a',fillColor:'#c03020',fillOpacity:1,weight:2}).bindTooltip('End').addTo(map);
+  map.fitBounds(l.polyline.getBounds(),{padding:[50,50]});
+  document.getElementById('walkBarName').textContent=walk.name;
+  document.getElementById('walkBarDist').textContent=walk.distance?`📏 ${walk.distance.toFixed(1)} mi`:'';
+  document.getElementById('walkBarDur').textContent=walk.duration?`⏱ ${walk.duration}`:'';
+  document.getElementById('walkBarDiff').textContent=walk.difficulty?walk.difficulty.charAt(0).toUpperCase()+walk.difficulty.slice(1):'';
+  document.getElementById('walkInfoBar').style.display='block';
+  document.querySelectorAll('.walk-card').forEach(c=>c.classList.remove('active'));
+  document.querySelector(`.walk-card[data-id="${id}"]`)?.classList.add('active');
+}
+
+document.getElementById('closeWalkBar').onclick=()=>{
+  document.getElementById('walkInfoBar').style.display='none';
+  if(selectedWalkId&&walkLayers[selectedWalkId]){
+    const l=walkLayers[selectedWalkId];l.polyline.setStyle({opacity:.45,weight:3});
+    if(l.startM){map.removeLayer(l.startM);l.startM=null;}
+    if(l.endM){map.removeLayer(l.endM);l.endM=null;}
+    selectedWalkId=null;
+  }
+  document.querySelectorAll('.walk-card').forEach(c=>c.classList.remove('active'));
+};
+
+/* ════════════════════════════════════════
+   AREA DROPDOWNS
+════════════════════════════════════════ */
+function populateAreaDropdowns(){
+  ['areaFilter','f-area','s-area','storyAreaFilter'].forEach(id=>{
+    const sel=document.getElementById(id);
+    if(!sel)return;
+    const preserve=sel.querySelector('option[value=""]');
+    sel.innerHTML='';
+    if(preserve)sel.appendChild(preserve);
+    else{const o=document.createElement('option');o.value='';o.textContent=id==='areaFilter'?'All areas of Warrington':'— Select area —';sel.appendChild(o);}
+    AREAS.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+  });
+}
+
+/* ════════════════════════════════════════
+   TABS
+════════════════════════════════════════ */
+let activeTab='sites';
+function switchTab(tab){
+  activeTab=tab;
+  // Force hide every tab panel, then show the chosen one
+  const panels={sites:'tab-sites',walks:'tab-walks',stories:'tab-stories',war:'tab-war'};
+  Object.entries(panels).forEach(([t,id])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(t===tab){
+      el.removeAttribute('style');       // clear any inline display
+      el.style.display='flex';
+      el.style.flexDirection='column';
+      el.style.flex='1';
+      el.style.overflowY='auto';
+      el.style.minHeight='0';
+      el.classList.remove('hidden');
+    } else {
+      el.style.cssText='display:none!important';
+      el.classList.add('hidden');
+    }
+    const btn=document.getElementById('tab-'+t+'-btn');
+    if(btn) btn.classList.toggle('active',t===tab);
+  });
+  if(tab!=='sites')closeDetail();
+  if(tab!=='war'){deactivateWarMode();}else{activateWarMode(activeWarPeriod);}
+}
+document.getElementById('tab-sites-btn').onclick=()=>switchTab('sites');
+document.getElementById('tab-walks-btn').onclick=()=>switchTab('walks');
+document.getElementById('tab-stories-btn').onclick=()=>switchTab('stories');
+document.getElementById('tab-war-btn').onclick=()=>switchTab('war');
+
+/* ════════════════════════════════════════
+   FILTER BUTTONS
+════════════════════════════════════════ */
+function buildFilterButtons(){
+  const cats=[...new Set(allSites().map(s=>s.category))];
+  cats.forEach(c=>{if(!activeFilters.has(c))activeFilters.add(c);});
+  const fc=document.getElementById('filterButtons');fc.innerHTML='';
+  cats.forEach(cat=>{
+    const btn=document.createElement('button');
+    btn.className='filter-btn'+(activeFilters.has(cat)?' on':'');
+    btn.textContent=cat;
+    btn.onclick=()=>{
+      if(activeFilters.has(cat)){activeFilters.delete(cat);btn.classList.remove('on');}
+      else{activeFilters.add(cat);btn.classList.add('on');}
+      siteMarkers.forEach(({site,marker})=>{activeFilters.has(site.category)?marker.addTo(map):map.removeLayer(marker);});
+      buildSiteCards();
+    };
+    fc.appendChild(btn);
+  });
+}
+
+/* ════════════════════════════════════════
+   SEARCH + AREA FILTER
+════════════════════════════════════════ */
+let searchQ='', filterArea='';
+
+document.getElementById('siteSearch').oninput=function(){searchQ=this.value.toLowerCase();buildSiteCards();};
+document.getElementById('areaFilter').onchange=function(){
+  filterArea=this.value;
+  const desc=document.getElementById('areaDesc');
+  const txt=document.getElementById('areaDescText');
+  const link=document.getElementById('areaStoriesLink');
+  if(filterArea&&AREA_DESC[filterArea]){
+    txt.textContent=AREA_DESC[filterArea];
+    link.textContent=`📖 See stories from ${filterArea}`;
+    link.onclick=()=>{document.getElementById('storyAreaFilter').value=filterArea;buildStoryCards();switchTab('stories');};
+    desc.classList.remove('hidden');
+  }else{desc.classList.add('hidden');}
+  buildSiteCards();
+};
+
+function siteMatchesSearch(site){
+  if(filterArea&&site.area!==filterArea)return false;
+  if(!searchQ)return true;
+  return[site.name,site.description,site.area,site.category,site.era].some(f=>f&&f.toLowerCase().includes(searchQ));
+}
+
+/* ════════════════════════════════════════
+   SITE CARDS
+════════════════════════════════════════ */
+function buildSiteCards(){
+  const list=document.getElementById('siteList');list.innerHTML='';
+  const visible=allSites().filter(s=>activeFilters.has(s.category)&&siteMatchesSearch(s));
+  document.getElementById('siteCount').textContent=`${visible.length} site${visible.length===1?'':'s'}${filterArea?' in '+filterArea:''}`;
+  if(!visible.length){list.innerHTML='<p style="padding:13px;font-size:.78rem;color:#8a7a60;font-family:Arial,sans-serif;">No sites match — try adjusting your search or filters.</p>';return;}
+  visible.forEach(site=>{
+    const card=document.createElement('div');
+    card.className='site-card'+(site.isUser?' user-added':'');
+    const photos=getAllPhotos(site);
+    let h='';
+    if(photos.length)h+=`<img class="thumb" src="${esc(photos[0])}" alt="" onerror="this.style.display='none'"/>`;
+    h+=`<div class="card-top"><h3>${esc(site.name)}</h3>${site.isUser?`<button class="delete-btn" data-id="${esc(site.id)}" title="Remove">✕</button>`:''}</div>`;
+    h+=`<div class="card-era">${esc(site.era||'')}${site.era&&site.category?' · ':''}${esc(site.category)}${site.area?' · '+esc(site.area):''}</div>`;
+    h+=`<p class="card-desc">${esc(site.description).slice(0,100)}${site.description.length>100?'…':''}</p>`;
+    h+=`<div class="card-actions">`;
+    h+=`<span class="badge ${gradeClass[site.grade]||'badge-other'}">${gradeLabels[site.grade]||'Notable'}</span>`;
+    if(site.isUser)h+=` <span class="badge badge-user">★</span>`;
+    h+=`<div style="flex:1;"></div>`;
+    h+=`<button class="icon-btn" data-detail="${esc(site.id)}">📋 Details</button>`;
+    h+=`<button class="icon-btn" data-share="${esc(site.id)}">🔗</button>`;
+    h+=`</div>`;
+    card.innerHTML=h;
+
+    // Click card → fly to map + open popup
+    card.addEventListener('click',e=>{
+      if(e.target.classList.contains('delete-btn')||e.target.dataset.detail||e.target.dataset.share)return;
+      document.querySelectorAll('.site-card').forEach(c=>c.classList.remove('active'));
+      card.classList.add('active');
+      const entry=siteMarkers.find(m=>m.site.id===site.id);
+      if(entry){map.setView([site.lat,site.lng],16,{animate:true});entry.marker.openPopup();}
+    });
+
+    // Details button
+    card.querySelector('[data-detail]')?.addEventListener('click',e=>{e.stopPropagation();openDetail(site.id);});
+    // Share button
+    card.querySelector('[data-share]')?.addEventListener('click',e=>{e.stopPropagation();shareSite(site.id);});
+    // Delete button
+    card.querySelector('.delete-btn')?.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm(`Remove "${site.name}"?`))return;
+      userSites=userSites.filter(s=>s.id!==site.id);
+      saveJ(KEYS.sites,userSites.map(({isUser,...r})=>r));
+      const entry=siteMarkers.find(m=>m.site.id===site.id);
+      if(entry){map.removeLayer(entry.marker);siteMarkers=siteMarkers.filter(m=>m.site.id!==site.id);}
+      buildFilterButtons();buildSiteCards();
+    });
+    list.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════
+   WALK CARDS
+════════════════════════════════════════ */
+function buildWalkCards(){
+  const list=document.getElementById('walkList');list.innerHTML='';
+  document.getElementById('tab-walks-btn').textContent=`👣 Walks${userWalks.length?` (${userWalks.length})`:''}`;
+  if(!userWalks.length){list.innerHTML='<div style="padding:22px 14px;text-align:center;"><p style="font-size:.8rem;color:#8a7a60;font-family:Arial,sans-serif;line-height:1.7;">No walks yet.<br>Click <strong>Add a heritage walk</strong>.</p></div>';return;}
+  userWalks.forEach(walk=>{
+    const card=document.createElement('div');card.className='walk-card';card.dataset.id=walk.id;
+    let h='';
+    if(walk.photo)h+=`<img class="thumb" src="${esc(walk.photo)}" alt="" onerror="this.style.display='none'"/>`;
+    h+=`<div class="card-top"><h3>${esc(walk.name)}</h3><button class="delete-btn" data-id="${esc(walk.id)}">✕</button></div>`;
+    h+=`<div class="card-meta">${walk.distance?`<span>📏 ${walk.distance.toFixed(1)} mi</span>`:''}${walk.duration?`<span>⏱ ${esc(walk.duration)}</span>`:''}</div>`;
+    if(walk.description)h+=`<p class="card-desc">${esc(walk.description).slice(0,95)}${walk.description.length>95?'…':''}</p>`;
+    if(walk.difficulty)h+=`<span class="badge ${diffBadge[walk.difficulty]||'badge-other'}">${walk.difficulty.charAt(0).toUpperCase()+walk.difficulty.slice(1)}</span>`;
+    card.innerHTML=h;
+    card.addEventListener('click',e=>{if(e.target.classList.contains('delete-btn'))return;switchTab('walks');selectWalk(walk.id);});
+    card.querySelector('.delete-btn').addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm(`Remove "${walk.name}"?`))return;
+      if(walkLayers[walk.id]){const l=walkLayers[walk.id];map.removeLayer(l.polyline);if(l.startM)map.removeLayer(l.startM);if(l.endM)map.removeLayer(l.endM);delete walkLayers[walk.id];}
+      if(selectedWalkId===walk.id){selectedWalkId=null;document.getElementById('walkInfoBar').style.display='none';}
+      userWalks=userWalks.filter(w=>w.id!==walk.id);saveJ(KEYS.walks,userWalks);buildWalkCards();
+    });
+    list.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════
+   STORY CARDS
+════════════════════════════════════════ */
+function buildStoryCards(){
+  const list=document.getElementById('storyList');list.innerHTML='';
+  const areaF=document.getElementById('storyAreaFilter').value;
+  const visible=userStories.filter(s=>!areaF||s.area===areaF).sort((a,b)=>b.id-a.id);
+  document.getElementById('storyCount').textContent=`${visible.length} stor${visible.length===1?'y':'ies'}${areaF?' from '+areaF:''}`;
+  document.getElementById('tab-stories-btn').textContent=`📖 Stories${userStories.length?` (${userStories.length})`:''}`;
+  if(!visible.length){list.innerHTML='<div style="padding:20px 14px;text-align:center;"><p style="font-size:.8rem;color:#8a7a60;font-family:Arial,sans-serif;line-height:1.7;">No stories yet.<br>Be the first to share a memory!</p></div>';return;}
+  visible.forEach(story=>{
+    const card=document.createElement('div');card.className='story-card';
+    let h='';
+    if(story.photo)h+=`<img class="thumb" src="${esc(story.photo)}" alt="" onerror="this.style.display='none'"/>`;
+    h+=`<div class="card-top"><h3>${esc(story.title)}</h3><button class="delete-btn" data-id="${esc(story.id)}">✕</button></div>`;
+    h+=`<div class="card-era">${esc(story.area)}${story.year?' · '+esc(story.year):''} · ${esc(story.author||'Anonymous')}</div>`;
+    const short=story.text.slice(0,150);const long=story.text.length>150;
+    h+=`<p class="card-desc" data-full="${esc(story.text)}" data-short="${esc(short)}">${esc(short)}${long?'…':''}</p>`;
+    if(long)h+=`<span class="story-expand">Read more</span>`;
+    card.innerHTML=h;
+    card.querySelector('.story-expand')?.addEventListener('click',e=>{
+      const p=card.querySelector('.card-desc');const btn=e.target;
+      if(btn.textContent==='Read more'){p.textContent=p.dataset.full;btn.textContent='Show less';}
+      else{p.textContent=p.dataset.short+'…';btn.textContent='Read more';}
+    });
+    card.querySelector('.delete-btn').addEventListener('click',()=>{
+      if(!confirm(`Remove this story?`))return;
+      userStories=userStories.filter(s=>s.id!==story.id);saveJ(KEYS.stories,userStories);buildStoryCards();
+    });
+    list.appendChild(card);
+  });
+}
+document.getElementById('storyAreaFilter').onchange=buildStoryCards;
+
+/* ════════════════════════════════════════
+   SITE DETAIL PANEL
+════════════════════════════════════════ */
+let detailSiteId=null;
+let detailPhotoIdx=0;
+let prevTab='sites';
+
+function openDetail(siteId){
+  prevTab=activeTab;
+  switchTab('sites');// ensure sidebar visible
+  detailSiteId=siteId;
+  detailPhotoIdx=0;
+  const site=siteById(siteId);
+  if(!site)return;
+
+  // Build info section
+  const photos=getAllPhotos(site);
+  const infoEl=document.getElementById('detailInfo');
+  let info=`<div class="detail-name">${esc(site.name)}</div>`;
+  info+=`<div class="detail-era-row">${esc(site.era||'')}${site.era&&site.category?' · ':''}${esc(site.category)}${site.area?' · '+esc(site.area):''}</div>`;
+  info+=`<div style="margin-bottom:7px;"><span class="badge ${gradeClass[site.grade]||'badge-other'}">${gradeLabels[site.grade]||'Notable'}</span>${site.isUser?' <span class="badge badge-user">★ Added</span>':''}</div>`;
+  info+=`<div class="detail-desc">${esc(site.description)}</div>`;
+  if(site.linkUrl)info+=`<a class="detail-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel||'More information →')}</a>`;
+  infoEl.innerHTML=info;
+
+  updateGallery(photos);
+  buildCommentsList(siteId);
+
+  document.getElementById('siteDetailPanel').classList.add('open');
+  document.getElementById('tab-sites').classList.add('hidden');
+}
+
+function closeDetail(){
+  document.getElementById('siteDetailPanel').classList.remove('open');
+  document.getElementById('tab-sites').classList.remove('hidden');
+  detailSiteId=null;
+}
+document.getElementById('detailBackBtn').onclick=closeDetail;
+
+document.getElementById('detailMapBtn').onclick=()=>{
+  const site=siteById(detailSiteId);if(!site)return;
+  closeDetail();
+  const entry=siteMarkers.find(m=>m.site.id===site.id);
+  if(entry){map.setView([site.lat,site.lng],16,{animate:true});entry.marker.openPopup();}
+};
+
+document.getElementById('detailShareBtn').onclick=()=>{if(detailSiteId)shareSite(detailSiteId);};
+
+// Gallery
+function updateGallery(photos){
+  const img=document.getElementById('detailImg');
+  const empty=document.getElementById('galleryEmpty');
+  const prev=document.getElementById('galPrev');
+  const next=document.getElementById('galNext');
+  const counter=document.getElementById('galCounter');
+  if(!photos.length){img.style.display='none';empty.style.display='flex';prev.style.display='none';next.style.display='none';counter.style.display='none';return;}
+  empty.style.display='none';img.style.display='block';
+  img.src=photos[detailPhotoIdx];img.onerror=()=>{img.style.display='none';};
+  if(photos.length>1){prev.style.display='flex';next.style.display='flex';counter.style.display='block';counter.textContent=`${detailPhotoIdx+1} / ${photos.length}`;}
+  else{prev.style.display='none';next.style.display='none';counter.style.display='none';}
+}
+document.getElementById('galPrev').onclick=()=>{
+  const site=siteById(detailSiteId);if(!site)return;
+  const photos=getAllPhotos(site);detailPhotoIdx=(detailPhotoIdx-1+photos.length)%photos.length;updateGallery(photos);
+};
+document.getElementById('galNext').onclick=()=>{
+  const site=siteById(detailSiteId);if(!site)return;
+  const photos=getAllPhotos(site);detailPhotoIdx=(detailPhotoIdx+1)%photos.length;updateGallery(photos);
+};
+document.getElementById('addPhotoBtn').onclick=()=>{
+  const url=document.getElementById('newPhotoInput').value.trim();
+  if(!url)return;
+  addExtraPhoto(detailSiteId,url);
+  document.getElementById('newPhotoInput').value='';
+  const site=siteById(detailSiteId);
+  const photos=getAllPhotos(site);detailPhotoIdx=photos.length-1;updateGallery(photos);
+  refreshMarkerPopup(site);
+};
+
+// Comments
+function buildCommentsList(siteId){
+  const list=document.getElementById('commentsList');
+  const relevant=allComments.filter(c=>c.siteId===siteId);
+  if(!relevant.length){list.innerHTML='<p class="no-comments">No comments yet. Be the first!</p>';return;}
+  list.innerHTML=relevant.map(c=>`
+    <div class="comment-item">
+      <div class="comment-meta"><strong>${esc(c.author||'Anonymous')}</strong> · ${esc(c.date)}</div>
+      <div class="comment-text">${esc(c.text)}</div>
+      ${c.photo?`<img class="comment-photo" src="${esc(c.photo)}" alt="" onerror="this.style.display='none'"/>`:''}
+    </div>`).join('');
+}
+document.getElementById('submitCommentBtn').onclick=()=>{
+  const text=document.getElementById('commentText').value.trim();
+  if(!text||!detailSiteId)return;
+  const comment={id:Date.now().toString(),siteId:detailSiteId,author:document.getElementById('commentAuthor').value.trim()||'Anonymous',date:new Date().toLocaleDateString('en-GB'),text,photo:document.getElementById('commentPhotoUrl').value.trim()};
+  allComments.push(comment);saveJ(KEYS.comments,allComments);
+  document.getElementById('commentText').value='';document.getElementById('commentPhotoUrl').value='';
+  buildCommentsList(detailSiteId);
+};
+
+/* ════════════════════════════════════════
+   SHARE A SITE
+════════════════════════════════════════ */
+function shareSite(siteId){
+  const url=window.location.href.split('#')[0]+'#site='+siteId;
+  navigator.clipboard.writeText(url).then(()=>showToast('Link copied to clipboard!')).catch(()=>{prompt('Copy this link:',url);});
+}
+
+function checkUrlHash(){
+  const hash=window.location.hash;
+  if(!hash.startsWith('#site='))return;
+  const id=hash.slice(6);
+  const site=siteById(id);
+  if(!site)return;
+  setTimeout(()=>{
+    map.setView([site.lat,site.lng],16,{animate:true});
+    const entry=siteMarkers.find(m=>m.site.id===id);
+    if(entry)entry.marker.openPopup();
+  },500);
+}
+
+/* ════════════════════════════════════════
+   LOCATE ME + NEARBY PANEL
+════════════════════════════════════════ */
+let locateMarker=null, locateCircle=null, locateRadius=500, locateActive=false;
+
+const LocateControl=L.Control.extend({
+  onAdd:function(){
+    const btn=L.DomUtil.create('button','');
+    btn.title='Locate me';btn.textContent='📍';btn.style.cssText='width:34px;height:34px;border:none;background:#fff;cursor:pointer;font-size:1.1rem;border-radius:4px;box-shadow:0 1px 5px rgba(0,0,0,.3);';
+    L.DomEvent.on(btn,'click',L.DomEvent.stop);
+    L.DomEvent.on(btn,'click',()=>{locateActive?deactivateLocate():activateLocate(btn);});
+    this._btn=btn;
+    return btn;
+  }
+});
+map.addControl(new LocateControl({position:'topright'}));
+
+function activateLocate(btn){
+  if(!navigator.geolocation){alert('Geolocation is not supported by your browser.');return;}
+  btn.textContent='⏳';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    locateActive=true;btn.textContent='📍';btn.style.background='#e8f0fe';
+    const {latitude:lat,longitude:lng}=pos.coords;
+    if(locateMarker)map.removeLayer(locateMarker);
+    if(locateCircle)map.removeLayer(locateCircle);
+    locateMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div class="locate-dot"></div>',className:'',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindTooltip('You are here');
+    locateCircle=L.circle([lat,lng],{radius:locateRadius,color:'#4285f4',fillColor:'#4285f4',fillOpacity:.08,weight:1.5}).addTo(map);
+    map.setView([lat,lng],14);
+    document.getElementById('nearbyPanel').style.display='block';
+    buildNearbyPanel(lat,lng);
+  },err=>{
+    btn.textContent='📍';
+    alert('Could not get your location. Please check your browser permissions.');
+  },{enableHighAccuracy:true,timeout:10000});
+}
+
+function deactivateLocate(){
+  locateActive=false;
+  if(locateMarker){map.removeLayer(locateMarker);locateMarker=null;}
+  if(locateCircle){map.removeLayer(locateCircle);locateCircle=null;}
+  document.getElementById('nearbyPanel').style.display='none';
+  document.querySelectorAll('.locate-control button').forEach(b=>{b.textContent='📍';b.style.background='#fff';});
+}
+
+document.getElementById('closeNearby').onclick=deactivateLocate;
+
+document.querySelectorAll('.rad-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.rad-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    locateRadius=parseInt(btn.dataset.r);
+    if(locateActive&&locateMarker){
+      if(locateCircle)map.removeLayer(locateCircle);
+      const ll=locateMarker.getLatLng();
+      locateCircle=L.circle(ll,{radius:locateRadius,color:'#4285f4',fillColor:'#4285f4',fillOpacity:.08,weight:1.5}).addTo(map);
+      buildNearbyPanel(ll.lat,ll.lng);
+    }
+  };
+});
+
+function buildNearbyPanel(lat,lng){
+  document.getElementById('nearbyTitle').textContent=`Within ${locateRadius>=1000?(locateRadius/1000)+'km':locateRadius+'m'}`;
+  const list=document.getElementById('nearbyList');list.innerHTML='';
+  const nearby=allSites().map(s=>{const d=haversineM([lat,lng],[s.lat,s.lng]);return{site:s,dist:d};}).filter(x=>x.dist<=locateRadius).sort((a,b)=>a.dist-b.dist);
+  if(!nearby.length){list.innerHTML='<p class="nearby-empty">No historic sites within this radius. Try expanding the range.</p>';return;}
+  // Group by era
+  const groups={};
+  nearby.forEach(({site,dist})=>{const g=eraGroup(site.era);if(!groups[g])groups[g]=[];groups[g].push({site,dist});});
+  Object.entries(groups).forEach(([label,items])=>{
+    const grpEl=document.createElement('div');grpEl.className='nearby-era-group';
+    grpEl.innerHTML=`<div class="nearby-era-label">${label}</div>`;
+    items.forEach(({site,dist})=>{
+      const row=document.createElement('div');row.className='nearby-site-row';
+      row.innerHTML=`<span class="nearby-site-name">${esc(site.name)}</span><span class="nearby-site-dist">${fmtDist(dist)}</span>`;
+      row.onclick=()=>{map.setView([site.lat,site.lng],16,{animate:true});siteMarkers.find(m=>m.site.id===site.id)?.marker.openPopup();};
+      grpEl.appendChild(row);
+    });
+    list.appendChild(grpEl);
+  });
+}
+
+/* ════════════════════════════════════════
+   PRINT WALK
+════════════════════════════════════════ */
+document.getElementById('printWalkBtn').onclick=()=>{
+  const walk=userWalks.find(w=>w.id===selectedWalkId);if(!walk)return;
+  const w=window.open('','_blank','width=700,height=900');
+  const pts=walk.waypoints||[];
+  const url=window.location.href.split('#')[0]+'#walk='+walk.id;
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${walk.name}</title>
+  <style>body{font-family:Georgia,serif;max-width:640px;margin:30px auto;color:#2c2416;line-height:1.6;}
+  h1{font-size:1.5rem;border-bottom:2px solid #2c2416;padding-bottom:8px;margin-bottom:12px;}
+  .stats{display:flex;gap:24px;font-family:Arial,sans-serif;font-size:.85rem;color:#6a5a40;margin-bottom:16px;}
+  .desc{font-family:Arial,sans-serif;font-size:.9rem;margin-bottom:20px;}
+  h2{font-size:1rem;margin:16px 0 6px;}
+  .wp{font-family:'Courier New',monospace;font-size:.8rem;color:#5a5a5a;margin:2px 0;}
+  .map-note{background:#f0ebe0;border:1px solid #d4c9b    const dot=L.circleMarker(pt,{radius:5,color:'#7a6a40',fillColor:'#c8a850',fillOpacity:.9,weight:2}).addTo(map);
+    drawDotMarkers.push(dot);
+    if(drawPoints.length>1){
+      if(drawPolyline)map.removeLayer(drawPolyline);
+      drawPolyline=L.polyline(drawPoints,{color:'#7a6a40',weight:3,opacity:.85}).addTo(map);
+    }
+    document.getElementById('undoDrawBtn').disabled=false;
+  }
+});
+
+/* WAR */
+const WAR_KEYS={memories:'warrington-war-memories-v1',honour:'warrington-honour-board-v1'};
+let warMemoriesWw1=loadJ(WAR_KEYS.memories+'-ww1')||[];
+let warMemoriesWw2=loadJ(WAR_KEYS.memories+'-ww2')||[];
+let honourEntries=loadJ(WAR_KEYS.honour)||[];
+let activeWarPeriod='ww1';
+let warMapMarkers=[];
+const ww1Sites=[
+  {id:'w1_cenotaph',name:'Warrington Cenotaph',lat:53.3904,lng:-2.5965,desc:'Records the sacrifice of over 1,400 Warrington men and women. Unveiled 1925 in Palmyra Square.'},
+  {id:'w1_rylands',name:'Rylands Wire Works',lat:53.3970,lng:-2.6150,desc:'Produced vast quantities of barbed wire for the Western Front.'},
+  {id:'w1_stelphin',name:"St Elphin's Church",lat:53.3908,lng:-2.5928,desc:'Many Warrington men who fell are commemorated here.'},
+  {id:'w1_bankquay',name:'Bank Quay Station',lat:53.3940,lng:-2.6050,desc:'Thousands of local men departed from here for the front.'},
+  {id:'w1_winwick',name:'Winwick Military Hospital',lat:53.4140,lng:-2.5880,desc:'Converted to treat hundreds of wounded soldiers.'},
+  {id:'w1_museum',name:'Warrington Museum',lat:53.3903,lng:-2.5960,desc:'Holds WW1 records, photographs and artefacts.'}
+];
+const ww2Sites=[
+  {id:'w2_burtonwood',name:'RAF Burtonwood (USAAF)',lat:53.4137,lng:-2.6525,desc:'One of the largest US Air Force bases in Europe.',linkUrl:'https://www.rafburtonwood.com/'},
+  {id:'w2_risley',name:'Risley Royal Ordnance Factory',lat:53.4275,lng:-2.5750,desc:'Tens of thousands employed producing shells and explosives.'},
+  {id:'w2_crosfields',name:"Crosfields Chemical Works",lat:53.3960,lng:-2.6100,desc:'Contributed vital materials to the war effort.'},
+  {id:'w2_stretton',name:'Stretton Airfield',lat:53.3700,lng:-2.6300,desc:'Relief airfield used for training and operations.'},
+  {id:'w2_cenotaph',name:'Warrington Cenotaph',lat:53.3904,lng:-2.5965,desc:'WW2 names added after 1945.'},
+  {id:'w2_bankquay',name:'Bank Quay Supply Hub',lat:53.3940,lng:-2.6050,desc:'Vital rail supply route throughout WW2.'}
+];
+const heroSites=[
+  {id:'h_cenotaph',name:'Warrington Cenotaph',lat:53.3904,lng:-2.5965,desc:'Visit Palmyra Square — over 1,400 names inscribed.'},
+  {id:'h_burtonwood',name:'RAF Burtonwood Heritage Centre',lat:53.4137,lng:-2.6525,desc:'Preserves the story of RAF Burtonwood and the USAAF.',linkUrl:'https://www.rafburtonwood.com/'},
+  {id:'h_museum',name:'Warrington Museum & Gallery',lat:53.3903,lng:-2.5960,desc:'Explore wartime collections and personal stories.'},
+  {id:'h_stelphin',name:"St Elphin's Church",lat:53.3908,lng:-2.5928,desc:'Living memorial with rolls of honour for both World Wars.'},
+  {id:'h_winwick',name:'Winwick Church',lat:53.4140,lng:-2.5880,desc:'Memorials and graves of local men who did not return.'},
+  {id:'h_victoriapark',name:'Victoria Park',lat:53.3880,lng:-2.5990,desc:'Memorials and community remembrance events.'}
+];
+function clearWarMarkers(){warMapMarkers.forEach(m=>{try{map.removeLayer(m);}catch(e){}});warMapMarkers=[];}
+function makeWarIcon(period){
+  const e=period==='ww1'?'🪖':period==='ww2'?'✈️':'🎖️';
+  return L.divIcon({className:'',html:'<div style="font-size:22px;line-height:1">'+e+'</div>',iconSize:[28,28],iconAnchor:[14,14]});
+}
+function buildWarPills(containerId,sites){
+  const el=document.getElementById(containerId);if(!el)return;
+  el.innerHTML=sites.map(s=>'<button class="war-site-pill" onclick="map.setView(['+s.lat+','+s.lng+'],15);">'+esc(s.name)+'</button>').join('');
+}
+function activateWarMode(period){
+  activeWarPeriod=period;clearWarMarkers();
+  document.querySelectorAll('.war-sub-btn').forEach(b=>b.classList.toggle('active',b.dataset.war===period));
+  ['ww1','ww2','heroes'].forEach(p=>{const el=document.getElementById('war-'+p);if(el)el.classList.toggle('active',p===period);});
+  const mapEl=document.getElementById('map');
+  let sites=[];
+  if(period==='ww1'){mapEl.className='war-sepia';sites=ww1Sites;buildWarPills('ww1Pills',ww1Sites);}
+  else if(period==='ww2'){mapEl.className='war-sepia';sites=ww2Sites;buildWarPills('ww2Pills',ww2Sites);}
+  else{mapEl.className='war-heroes';sites=heroSites;buildWarPills('heroPills',heroSites);}
+  sites.forEach(s=>{
+    const mk=L.marker([s.lat,s.lng],{icon:makeWarIcon(period)}).addTo(map)
+      .bindPopup('<strong>'+esc(s.name)+'</strong><br><small>'+esc(s.desc||'')+'</small>'+(s.linkUrl?'<br><a href="'+esc(s.linkUrl)+'" target="_blank" style="color:#2a5a8a">Visit site</a>':''));
+    warMapMarkers.push(mk);
+  });
+}
+function deactivateWarMode(){clearWarMarkers();document.getElementById('map').className='';}
+
+const BRANCH_COLS={Army:'#4a6a2a',RAF:'#2a4a8a',Navy:'#0a2a5a',Merchant:'#2a6a6a',Home:'#5a2a6a',Civilian:'#6a3a1a',Womens:'#7a2a5a',Other:'#5a5a5a'};
+function buildHonourBoard(){
+  const list=document.getElementById('honourList'),count=document.getElementById('honourCount');
+  if(!list)return;
+  if(!honourEntries.length){list.innerHTML='<p style="padding:14px;font-size:.8rem;color:#9a8a60;font-style:italic">No entries yet.</p>';if(count)count.textContent='Honour Board';return;}
+  if(count)count.textContent='Honour Board ('+honourEntries.length+')';
+  list.innerHTML=honourEntries.slice().reverse().map(e=>{
+    const col=BRANCH_COLS[e.branch]||'#5a5a5a',s=e.story.length>200?e.story.slice(0,200)+'...':e.story;
+    return '<div class="honour-card" style="--branch-col:'+col+'">'
+      +(e.photo?'<img class="honour-photo" src="'+esc(e.photo)+'" onerror="this.style.display=\'none\'"/>':'')
+      +'<div class="honour-name">'+esc(e.name)+'</div>'
+      +'<div class="honour-rank">'+(e.rank?esc(e.rank)+' · ':'')+esc(e.branch||'')+'</div>'
+      +(e.years?'<div class="honour-years">'+esc(e.years)+'</div>':'')
+      +'<span class="honour-branch-badge" style="background:'+col+'">'+esc(e.branch||'Other')+'</span>'
+      +'<div class="honour-story">'+esc(s)+'</div>'
+      +(e.submitter?'<div class="honour-submitter">Added by '+esc(e.submitter)+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+function buildWw1MemList(){
+  const list=document.getElementById('ww1MemList'),cnt=document.getElementById('ww1MemCount');if(!list)return;
+  if(cnt)cnt.textContent=warMemoriesWw1.length+' memor'+(warMemoriesWw1.length===1?'y':'ies');
+  list.innerHTML=warMemoriesWw1.slice().reverse().map(m=>'<div class="story-card"><div class="story-title">'+esc(m.title)+'</div><div class="story-meta">'+esc(m.author||'Anonymous')+' · '+esc(m.date)+'</div><div class="story-text">'+esc(m.text)+'</div></div>').join('')||'<p style="padding:10px;font-size:.8rem;color:#9a8a60">No memories yet.</p>';
+}
+function buildWw2MemList(){
+  const list=document.getElementById('ww2MemList'),cnt=document.getElementById('ww2MemCount');if(!list)return;
+  if(cnt)cnt.textContent=warMemoriesWw2.length+' memor'+(warMemoriesWw2.length===1?'y':'ies');
+  list.innerHTML=warMemoriesWw2.slice().reverse().map(m=>'<div class="story-card"><div class="story-title">'+esc(m.title)+'</div><div class="story-meta">'+esc(m.author||'Anonymous')+' · '+esc(m.date)+'</div><div class="story-text">'+esc(m.text)+'</div></div>').join('')||'<p style="padding:10px;font-size:.8rem;color:#9a8a60">No memories yet.</p>';
+}
+document.querySelectorAll('.war-sub-btn').forEach(btn=>{btn.onclick=()=>activateWarMode(btn.dataset.war);});
+document.getElementById('toggleAddWw1Memory').onclick=()=>document.getElementById('addWw1MemoryPanel').classList.toggle('open');
+document.getElementById('cancelWw1Btn').onclick=()=>document.getElementById('addWw1MemoryPanel').classList.remove('open');
+document.getElementById('submitWw1Btn').onclick=()=>{
+  const t=document.getElementById('wm1-title').value.trim(),tx=document.getElementById('wm1-text').value.trim(),err=document.getElementById('ww1MemErr');
+  if(!t||!tx){if(err)err.textContent='Please fill in title and story.';return;}if(err)err.textContent='';
+  warMemoriesWw1.push({id:Date.now().toString(),title:t,author:document.getElementById('wm1-author').value.trim()||'Anonymous',connection:document.getElementById('wm1-connection').value.trim(),text:tx,photo:document.getElementById('wm1-photo').value.trim(),date:new Date().toLocaleDateString('en-GB')});
+  saveJ(WAR_KEYS.memories+'-ww1',warMemoriesWw1);
+  ['wm1-title','wm1-author','wm1-connection','wm1-text','wm1-photo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addWw1MemoryPanel').classList.remove('open');buildWw1MemList();showToast('WW1 memory shared');
+};
+document.getElementById('toggleAddWw2Memory').onclick=()=>document.getElementById('addWw2MemoryPanel').classList.toggle('open');
+document.getElementById('cancelWw2Btn').onclick=()=>document.getElementById('addWw2MemoryPanel').classList.remove('open');
+document.getElementById('submitWw2Btn').onclick=()=>{
+  const t=document.getElementById('wm2-title').value.trim(),tx=document.getElementById('wm2-text').value.trim(),err=document.getElementById('ww2MemErr');
+  if(!t||!tx){if(err)err.textContent='Please fill in title and story.';return;}if(err)err.textContent='';
+  warMemoriesWw2.push({id:Date.now().toString(),title:t,author:document.getElementById('wm2-author').value.trim()||'Anonymous',connection:document.getElementById('wm2-connection').value.trim(),text:tx,photo:document.getElementById('wm2-photo').value.trim(),date:new Date().toLocaleDateString('en-GB')});
+  saveJ(WAR_KEYS.memories+'-ww2',warMemoriesWw2);
+  ['wm2-title','wm2-author','wm2-connection','wm2-text','wm2-photo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addWw2MemoryPanel').classList.remove('open');buildWw2MemList();showToast('WW2 memory shared');
+};
+document.getElementById('toggleAddHonour').onclick=()=>{const p=document.getElementById('addHonourPanel');if(p)p.classList.toggle('open');};
+document.getElementById('cancelHonourBtn').onclick=()=>{const p=document.getElementById('addHonourPanel');if(p)p.classList.remove('open');};
+document.getElementById('submitHonourBtn').onclick=()=>{
+  const n=document.getElementById('h-name').value.trim(),s=document.getElementById('h-story').value.trim(),err=document.getElementById('honourFormErr');
+  if(!n||!s){if(err)err.textContent='Please enter a name and story.';return;}if(err)err.textContent='';
+  honourEntries.push({id:Date.now().toString(),name:n,branch:document.getElementById('h-branch').value,rank:document.getElementById('h-rank').value.trim(),war:document.getElementById('h-war').value,years:document.getElementById('h-years').value.trim(),story:s,photo:document.getElementById('h-photo').value.trim(),submitter:document.getElementById('h-submitter').value.trim(),date:new Date().toLocaleDateString('en-GB')});
+  saveJ(WAR_KEYS.honour,honourEntries);
+  ['h-name','h-rank','h-years','h-story','h-photo','h-submitter'].forEach(id=>document.getElementById(id).value='');
+  const p=document.getElementById('addHonourPanel');if(p)p.classList.remove('open');buildHonourBoard();showToast('Added to Honour Board');
+};
+(function(){
+  ['tab-sites','tab-walks','tab-stories','tab-war'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(id==='tab-sites'){el.style.display='flex';el.style.flexDirection='column';el.style.flex='1';el.style.overflowY='auto';el.style.minHeight='0';el.classList.remove('hidden');}
+    else{el.style.cssText='display:none!important';el.classList.add('hidden');}
+  });
+})();
+document.getElementById('map').className='';
+populateAreaDropdowns();
+allSites().forEach(s=>activeFilters.add(s.category));
+allSites().forEach(s=>addSiteMarker(s));
+userWalks.forEach(w=>addWalkLayer(w));
+buildFilterButtons();
+buildSiteCards();
+buildWalkCards();
+buildStoryCards();
+buildWw1MemList();
+buildWw2MemList();
+buildHonourBoard();
+buildWarPills('ww1Pills',ww1Sites);
+checkUrlHash();
+window.openDetail=openDetail;
+</script>
+</body>
+</html>
