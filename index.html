@@ -856,7 +856,12 @@ function switchTab(tab){
   ['sites','walks','stories','war'].forEach(t=>{
     const el=document.getElementById('tab-'+t);
     const btn=document.getElementById('tab-'+t+'-btn');
-    if(el) el.style.display=(t===tab)?'flex':'none';
+    if(el){
+      const show=(t===tab);
+      el.style.display=show?'flex':'none';
+      // also sync the class so !important CSS and inline style agree
+      el.classList.toggle('hidden',!show);
+    }
     if(btn) btn.classList.toggle('active',t===tab);
   });
   if(tab!=='sites')closeDetail();
