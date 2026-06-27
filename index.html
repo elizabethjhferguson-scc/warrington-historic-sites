@@ -22,14 +22,14 @@
     header {
       background: #2c2416;
       color: #f5f0e8;
-      padding: 14px 24px;
+      padding: 12px 20px;
       display: flex;
       align-items: baseline;
-      gap: 16px;
+      gap: 14px;
       flex-shrink: 0;
     }
-    header h1 { font-size: 1.4rem; letter-spacing: 0.04em; }
-    header span { font-size: 0.85rem; opacity: 0.6; font-style: italic; }
+    header h1 { font-size: 1.3rem; letter-spacing: 0.04em; }
+    header span { font-size: 0.82rem; opacity: 0.55; font-style: italic; }
 
     .layout { display: flex; flex: 1; overflow: hidden; }
 
@@ -44,98 +44,135 @@
       flex-direction: column;
     }
 
-    /* ── Add Site toggle button ── */
-    .add-site-btn {
+    /* ── Tab bar ── */
+    .tab-bar {
+      display: flex;
+      flex-shrink: 0;
+      border-bottom: 2px solid #d4c9b0;
+      background: #f0ebe0;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 11px 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      font-size: 0.82rem;
+      color: #7a6a50;
+      letter-spacing: 0.02em;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: #2c2416; background: #e8e0d0; }
+    .tab-btn.active { color: #2c2416; border-bottom-color: #2c2416; font-weight: bold; }
+
+    /* ── Tab content panels ── */
+    .tab-content { display: flex; flex-direction: column; flex: 1; }
+    .tab-content.hidden { display: none; }
+
+    /* ── Shared: Add-thing button ── */
+    .add-btn {
       display: flex;
       align-items: center;
       gap: 10px;
       width: 100%;
-      padding: 13px 16px;
-      background: #3e3220;
+      padding: 12px 16px;
       color: #f5f0e8;
       border: none;
       cursor: pointer;
       font-family: Georgia, serif;
-      font-size: 0.88rem;
-      letter-spacing: 0.03em;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
       text-align: left;
       transition: background 0.15s;
       flex-shrink: 0;
     }
-    .add-site-btn:hover { background: #524232; }
-    .add-site-btn .icon {
-      width: 22px; height: 22px;
-      background: #b8860b;
+    .add-btn .icon {
+      width: 21px; height: 21px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; font-style: normal; flex-shrink: 0;
+      font-size: 1rem; flex-shrink: 0;
     }
+    .add-btn-site { background: #3e3220; }
+    .add-btn-site:hover { background: #524232; }
+    .add-btn-site .icon { background: #b8860b; }
+    .add-btn-walk { background: #4a2010; }
+    .add-btn-walk:hover { background: #622a18; }
+    .add-btn-walk .icon { background: #c03020; }
 
-    /* ── Add Site form panel ── */
-    .add-site-panel {
+    /* ── Shared: collapsible form panel ── */
+    .form-panel {
       display: none;
       background: #f0ebe0;
       border-bottom: 2px solid #b0a070;
-      padding: 16px;
+      padding: 14px 16px;
       flex-shrink: 0;
     }
-    .add-site-panel.open { display: block; }
+    .form-panel.open { display: block; }
 
-    .form-group { margin-bottom: 10px; }
+    .form-group { margin-bottom: 9px; }
     .form-group label {
       display: block;
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       text-transform: uppercase;
       letter-spacing: 0.09em;
       color: #6a5a40;
       margin-bottom: 3px;
     }
-    .form-hint {
-      font-size: 0.67rem;
-      color: #8a7a60;
-      font-family: Arial, sans-serif;
-      margin-top: 3px;
-      font-style: italic;
-    }
+    .form-hint { font-size: 0.66rem; color: #8a7a60; font-family: Arial, sans-serif; margin-top: 2px; font-style: italic; }
     .form-group input,
     .form-group textarea,
     .form-group select {
       width: 100%;
-      padding: 6px 8px;
+      padding: 5px 8px;
       border: 1px solid #c0b090;
       border-radius: 3px;
       background: #fff;
       font-family: Arial, sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.79rem;
       color: #2c2416;
       outline: none;
     }
     .form-group input:focus,
     .form-group textarea:focus,
     .form-group select:focus { border-color: #7a6a40; }
-    .form-group textarea { resize: vertical; min-height: 72px; }
+    .form-group textarea { resize: vertical; min-height: 64px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-    .pick-map-btn {
-      width: 100%;
-      margin-top: 6px;
-      padding: 6px 10px;
-      background: #3a5a7a;
-      color: #fff;
+    .map-action-btn {
+      padding: 5px 10px;
       border: none;
       border-radius: 3px;
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       cursor: pointer;
       font-family: Arial, sans-serif;
       transition: background 0.15s;
+      color: #fff;
     }
-    .pick-map-btn:hover { background: #2a4a6a; }
-    .pick-map-btn.picking { background: #b04a20; }
+    .map-action-btn:disabled { opacity: 0.4; cursor: default; }
+    .btn-draw   { background: #3a5a7a; }
+    .btn-draw:hover:not(:disabled)  { background: #2a4a6a; }
+    .btn-draw.active { background: #b04a20; }
+    .btn-undo   { background: #7a6a40; }
+    .btn-undo:hover:not(:disabled)  { background: #6a5a30; }
+    .btn-clear  { background: #8a3a2a; }
+    .btn-clear:hover:not(:disabled) { background: #7a2a1a; }
+    .btn-pick   { background: #3a5a7a; width: 100%; margin-top: 5px; }
+    .btn-pick:hover { background: #2a4a6a; }
+    .btn-pick.active { background: #b04a20; }
 
-    .pick-hint {
+    .draw-info {
+      font-size: 0.73rem;
+      font-family: Arial, sans-serif;
+      color: #6a5a40;
+      margin-bottom: 5px;
+      min-height: 1em;
+    }
+    .hint-box {
       display: none;
-      font-size: 0.7rem;
+      font-size: 0.69rem;
       color: #b04a20;
       font-family: Arial, sans-serif;
       margin-top: 5px;
@@ -145,185 +182,175 @@
       border: 1px solid #e0b090;
     }
 
-    .form-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .form-actions { display: flex; gap: 7px; margin-top: 12px; }
     .btn-submit {
-      flex: 1;
-      padding: 9px;
-      background: #2c2416;
-      color: #f5f0e8;
-      border: none;
-      border-radius: 3px;
-      font-family: Georgia, serif;
-      font-size: 0.85rem;
-      cursor: pointer;
+      flex: 1; padding: 8px;
+      background: #2c2416; color: #f5f0e8;
+      border: none; border-radius: 3px;
+      font-family: Georgia, serif; font-size: 0.83rem; cursor: pointer;
       transition: background 0.15s;
     }
     .btn-submit:hover { background: #3e3420; }
     .btn-cancel {
-      padding: 9px 14px;
-      background: none;
-      border: 1px solid #b0a080;
-      border-radius: 3px;
-      font-family: Arial, sans-serif;
-      font-size: 0.8rem;
-      cursor: pointer;
-      color: #6a5a40;
+      padding: 8px 12px;
+      background: none; border: 1px solid #b0a080;
+      border-radius: 3px; font-family: Arial, sans-serif;
+      font-size: 0.78rem; cursor: pointer; color: #6a5a40;
     }
     .btn-cancel:hover { background: #e0d8c8; }
-
     .form-error {
       display: none;
-      color: #c03020;
-      font-size: 0.75rem;
-      font-family: Arial, sans-serif;
-      margin-top: 8px;
-      padding: 6px 8px;
-      background: #fde8e8;
-      border-radius: 3px;
-      border: 1px solid #e0a0a0;
+      color: #c03020; font-size: 0.73rem; font-family: Arial, sans-serif;
+      margin-top: 7px; padding: 5px 8px;
+      background: #fde8e8; border-radius: 3px; border: 1px solid #e0a0a0;
     }
 
     /* ── Filter bar ── */
     .filter-bar {
-      padding: 10px 16px;
+      padding: 9px 14px;
       border-bottom: 1px solid #d4c9b0;
       background: #f0ebe0;
       flex-shrink: 0;
     }
     .filter-bar label {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: #7a6a50;
-      display: block;
-      margin-bottom: 6px;
+      font-size: 0.67rem; text-transform: uppercase;
+      letter-spacing: 0.09em; color: #7a6a50;
+      display: block; margin-bottom: 5px;
     }
-    .filter-buttons { display: flex; flex-wrap: wrap; gap: 5px; }
+    .filter-buttons { display: flex; flex-wrap: wrap; gap: 4px; }
     .filter-btn {
-      font-size: 0.7rem;
-      padding: 3px 10px;
-      border: 1px solid #b0a080;
-      border-radius: 12px;
-      background: #faf7f2;
-      cursor: pointer;
-      font-family: Arial, sans-serif;
-      transition: all 0.15s;
+      font-size: 0.69rem; padding: 2px 9px;
+      border: 1px solid #b0a080; border-radius: 11px;
+      background: #faf7f2; cursor: pointer;
+      font-family: Arial, sans-serif; transition: all 0.15s;
     }
     .filter-btn.on { background: #2c2416; color: #f5f0e8; border-color: #2c2416; }
 
-    /* ── Sidebar header ── */
-    .sidebar-header {
-      padding: 10px 16px;
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #7a6a50;
+    /* ── Sidebar header strip ── */
+    .list-header {
+      padding: 8px 14px;
+      font-size: 0.67rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #7a6a50;
       border-bottom: 1px solid #d4c9b0;
-      background: #f0ebe0;
-      flex-shrink: 0;
+      background: #f0ebe0; flex-shrink: 0;
     }
 
-    /* ── Site cards ── */
-    #siteList { overflow-y: auto; flex: 1; }
-
-    .site-card {
-      padding: 13px 16px;
+    /* ── Site & walk cards ── */
+    .site-card, .walk-card {
+      padding: 12px 15px;
       border-bottom: 1px solid #e8e0d0;
       cursor: pointer;
       transition: background 0.15s;
     }
-    .site-card:hover { background: #ede7d8; }
-    .site-card.active { background: #d9cdb8; }
-    .site-card.user-added { border-left: 3px solid #b8860b; padding-left: 13px; }
+    .site-card:hover, .walk-card:hover { background: #ede7d8; }
+    .site-card.active, .walk-card.active { background: #d9cdb8; }
+    .site-card.user-added { border-left: 3px solid #b8860b; padding-left: 12px; }
+    .walk-card { border-left: 3px solid #c03020; padding-left: 12px; }
 
-    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
-    .card-top h3 { font-size: 0.92rem; flex: 1; }
-
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 5px; }
+    .card-top h3 { font-size: 0.9rem; flex: 1; }
     .delete-btn {
-      background: none;
-      border: none;
-      color: #a09080;
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 0;
-      line-height: 1;
-      flex-shrink: 0;
-      margin-top: 1px;
+      background: none; border: none; color: #a09080;
+      cursor: pointer; font-size: 0.85rem; padding: 0;
+      line-height: 1; flex-shrink: 0; margin-top: 1px;
     }
     .delete-btn:hover { color: #c03020; }
 
-    .site-card .thumb {
-      width: 100%;
-      height: 85px;
-      object-fit: cover;
-      border-radius: 3px;
-      margin-bottom: 8px;
-      display: block;
+    .card-era, .card-meta {
+      font-size: 0.7rem; color: #8a7a60; font-style: italic;
+      margin: 3px 0 4px; font-family: Arial, sans-serif;
     }
-
-    .site-card .era {
-      font-size: 0.71rem;
-      color: #8a7a60;
-      font-style: italic;
-      margin-bottom: 5px;
-      margin-top: 3px;
-    }
-    .site-card p {
-      font-size: 0.77rem;
-      color: #5a4e3c;
-      line-height: 1.45;
-      font-family: Arial, sans-serif;
-    }
-
-    .card-links {
-      margin-top: 7px;
+    .card-meta { font-style: normal; display: flex; gap: 12px; }
+    .card-desc {
+      font-size: 0.76rem; color: #5a4e3c;
+      line-height: 1.44; font-family: Arial, sans-serif;
     }
     .card-link {
-      font-size: 0.72rem;
-      color: #2a5a8a;
-      font-family: Arial, sans-serif;
-      text-decoration: none;
+      font-size: 0.71rem; color: #2a5a8a;
+      font-family: Arial, sans-serif; text-decoration: none;
+      display: block; margin-top: 6px;
     }
     .card-link:hover { text-decoration: underline; }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.64rem;
-      font-family: Arial, sans-serif;
-      padding: 2px 7px;
-      border-radius: 10px;
-      margin-top: 6px;
-      font-weight: bold;
-      letter-spacing: 0.03em;
+    .thumb {
+      width: 100%; height: 82px; object-fit: cover;
+      border-radius: 3px; margin-bottom: 8px; display: block;
     }
-    .badge-I        { background: #b5432a; color: #fff; }
-    .badge-II-star  { background: #c97c2a; color: #fff; }
-    .badge-II       { background: #5a7a3a; color: #fff; }
-    .badge-other    { background: #4a6a8a; color: #fff; }
-    .badge-user     { background: #b8860b; color: #fff; }
+
+    .badge {
+      display: inline-block; font-size: 0.62rem;
+      font-family: Arial, sans-serif; padding: 2px 7px;
+      border-radius: 10px; margin-top: 5px;
+      font-weight: bold; letter-spacing: 0.03em;
+    }
+    .badge-I       { background: #b5432a; color: #fff; }
+    .badge-II-star { background: #c97c2a; color: #fff; }
+    .badge-II      { background: #5a7a3a; color: #fff; }
+    .badge-other   { background: #4a6a8a; color: #fff; }
+    .badge-user    { background: #b8860b; color: #fff; }
+    .badge-easy    { background: #3a7a3a; color: #fff; }
+    .badge-moderate { background: #8a6a20; color: #fff; }
+    .badge-challenging { background: #8a3a20; color: #fff; }
+
+    /* ── Walks hero header ── */
+    .walks-hero {
+      background: linear-gradient(150deg, #3a2010 0%, #6a4228 100%);
+      color: #f5f0e8;
+      padding: 18px 16px 14px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .walks-hero h2 { font-size: 1.05rem; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .walks-hero p {
+      font-size: 0.74rem; opacity: 0.75;
+      font-style: italic; font-family: Arial, sans-serif;
+    }
+
+    /* ── Walk stats bar on map ── */
+    #walkInfoBar {
+      display: none;
+      position: absolute;
+      bottom: 24px; left: 330px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid #c8b090;
+      border-radius: 5px;
+      padding: 8px 14px;
+      z-index: 1000;
+      font-family: Arial, sans-serif;
+      font-size: 0.8rem;
+      color: #2c2416;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      max-width: 300px;
+    }
+    #walkInfoBar strong { font-family: Georgia, serif; font-size: 0.88rem; }
+    #walkInfoBar .close-bar {
+      position: absolute; top: 5px; right: 8px;
+      background: none; border: none; cursor: pointer;
+      font-size: 0.9rem; color: #8a7a60;
+    }
+    #walkInfoBar .close-bar:hover { color: #c03020; }
+    #walkInfoBar .stats { margin-top: 4px; display: flex; gap: 14px; color: #6a5a40; }
 
     /* ── Map ── */
-    #map { flex: 1; }
-
-    /* Pick mode cursor */
+    #map { flex: 1; position: relative; }
     .leaflet-container.map-picking,
     .leaflet-container.map-picking .leaflet-interactive { cursor: crosshair !important; }
 
     /* ── Popups ── */
     .leaflet-popup-content-wrapper { border-radius: 4px; font-family: Georgia, serif; }
     .popup-img {
-      width: 100%; max-height: 120px; object-fit: cover;
-      border-radius: 3px; margin-bottom: 8px; display: block;
+      width: 100%; max-height: 115px; object-fit: cover;
+      border-radius: 3px; margin-bottom: 7px; display: block;
     }
-    .popup-title { font-size: 1rem; font-weight: bold; margin-bottom: 3px; color: #2c2416; }
-    .popup-era { font-size: 0.73rem; color: #8a7a60; font-style: italic; margin-bottom: 6px; }
-    .popup-desc { font-size: 0.79rem; line-height: 1.5; color: #3c3020; font-family: Arial, sans-serif; max-width: 220px; }
-    .popup-badge { margin-top: 8px; }
-    .popup-link { display: block; margin-top: 8px; font-size: 0.74rem; color: #2a5a8a; font-family: Arial, sans-serif; text-decoration: none; }
+    .popup-title { font-size: 0.97rem; font-weight: bold; margin-bottom: 3px; color: #2c2416; }
+    .popup-era   { font-size: 0.72rem; color: #8a7a60; font-style: italic; margin-bottom: 5px; }
+    .popup-desc  { font-size: 0.78rem; line-height: 1.5; color: #3c3020; font-family: Arial, sans-serif; max-width: 220px; }
+    .popup-badge { margin-top: 7px; }
+    .popup-link  { display: block; margin-top: 7px; font-size: 0.73rem; color: #2a5a8a; font-family: Arial, sans-serif; text-decoration: none; }
     .popup-link:hover { text-decoration: underline; }
 
     footer {
-      font-size: 0.68rem; text-align: center; padding: 6px;
+      font-size: 0.67rem; text-align: center; padding: 5px;
       color: #8a7a60; background: #f0ebe0;
       border-top: 1px solid #d4c9b0;
       font-family: Arial, sans-serif; flex-shrink: 0;
@@ -333,6 +360,7 @@
     @media (max-width: 640px) {
       .layout { flex-direction: column; }
       #sidebar { width: 100%; height: 260px; border-right: none; border-bottom: 1px solid #d4c9b0; }
+      #walkInfoBar { left: 10px; right: 10px; bottom: 10px; }
     }
   </style>
 </head>
@@ -344,40 +372,41 @@
 </header>
 
 <div class="layout">
-  <div id="sidebar">
+<div id="sidebar">
 
-    <!-- ── Add Site button ── -->
-    <button class="add-site-btn" id="toggleAddSite">
-      <span class="icon">★</span>
-      Add a historic site
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-sites-btn">🗺 Sites</button>
+    <button class="tab-btn" id="tab-walks-btn">👣 Walks</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SITES TAB
+  ══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-sites">
+
+    <!-- Add Site button -->
+    <button class="add-btn add-btn-site" id="toggleAddSite">
+      <span class="icon">★</span> Add a historic site
     </button>
 
-    <!-- ── Add Site form panel ── -->
-    <div class="add-site-panel" id="addSitePanel">
-
+    <!-- Add Site form -->
+    <div class="form-panel" id="addSitePanel">
       <div class="form-group">
         <label>Site name *</label>
         <input type="text" id="f-name" placeholder="e.g. Warrington Town Hall" />
       </div>
-
       <div class="form-group">
         <label>Era / date</label>
         <input type="text" id="f-era" placeholder="e.g. 1750, Medieval, Victorian" />
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Category</label>
           <select id="f-category">
-            <option>Civic</option>
-            <option>Religious</option>
-            <option>Industrial</option>
-            <option>Manor</option>
-            <option>Country House</option>
-            <option>Village Heritage</option>
-            <option>Historic Inn</option>
-            <option>Education</option>
-            <option>Prehistoric</option>
+            <option>Civic</option><option>Religious</option><option>Industrial</option>
+            <option>Manor</option><option>Country House</option><option>Village Heritage</option>
+            <option>Historic Inn</option><option>Education</option><option>Prehistoric</option>
             <option value="__custom__">Other…</option>
           </select>
           <input type="text" id="f-category-custom" placeholder="Custom category" style="display:none;margin-top:4px;" />
@@ -385,63 +414,140 @@
         <div class="form-group">
           <label>Listed grade</label>
           <select id="f-grade">
-            <option value="other" selected>Notable / unlisted</option>
+            <option value="other" selected>Notable</option>
             <option value="II">Grade II</option>
             <option value="II*">Grade II*</option>
             <option value="I">Grade I</option>
           </select>
         </div>
       </div>
-
       <div class="form-group">
         <label>Description *</label>
-        <textarea id="f-desc" placeholder="Brief history and significance of the site…"></textarea>
+        <textarea id="f-desc" placeholder="Brief history and significance…"></textarea>
       </div>
-
       <div class="form-group">
-        <label>Photo URL</label>
+        <label>Photo URL (optional)</label>
         <input type="url" id="f-photo" placeholder="https://upload.wikimedia.org/…" />
-        <p class="form-hint">Paste a public image URL (e.g. from Wikimedia Commons or Imgur)</p>
+        <p class="form-hint">Paste a public image URL, e.g. from Wikimedia Commons</p>
       </div>
-
       <div class="form-group">
-        <label>Link to historic information</label>
+        <label>Historic information link (optional)</label>
         <input type="url" id="f-link-url" placeholder="https://historicengland.org.uk/…" />
-        <input type="text" id="f-link-label" placeholder="Link label, e.g. Historic England listing" style="margin-top:4px;" />
+        <input type="text" id="f-link-label" placeholder="Link label, e.g. Historic England" style="margin-top:4px;" />
       </div>
-
       <div class="form-group">
         <label>Map location *</label>
         <div class="form-row">
           <input type="number" id="f-lat" placeholder="Latitude" step="any" />
           <input type="number" id="f-lng" placeholder="Longitude" step="any" />
         </div>
-        <button class="pick-map-btn" id="pickMapBtn">📍 Click on map to set location</button>
-        <div class="pick-hint" id="pickHint">Now click anywhere on the map to drop a pin. The coordinates will fill in automatically.</div>
+        <button class="map-action-btn btn-pick" id="pickMapBtn">📍 Click on map to set location</button>
+        <div class="hint-box" id="pickHint">Click anywhere on the map to drop a pin.</div>
       </div>
-
       <div class="form-actions">
         <button class="btn-submit" id="submitSiteBtn">Add to map</button>
         <button class="btn-cancel" id="cancelAddSite">Cancel</button>
       </div>
-      <div class="form-error" id="formError"></div>
-
+      <div class="form-error" id="siteFormError"></div>
     </div>
-    <!-- /form panel -->
 
-    <!-- ── Filter bar ── -->
+    <!-- Filter bar -->
     <div class="filter-bar">
       <label>Filter by category</label>
       <div class="filter-buttons" id="filterButtons"></div>
     </div>
-
-    <div class="sidebar-header" id="siteCount">Sites — click to locate on map</div>
+    <div class="list-header" id="siteCount">Sites — click to locate on map</div>
     <div id="siteList"></div>
 
-  </div><!-- /sidebar -->
+  </div><!-- /tab-sites -->
 
-  <div id="map"></div>
-</div>
+  <!-- ══════════════════════════════════════
+       WALKS TAB
+  ══════════════════════════════════════ -->
+  <div class="tab-content hidden" id="tab-walks">
+
+    <!-- Hero -->
+    <div class="walks-hero">
+      <h2>Footsteps into the Past</h2>
+      <p>Heritage walks around Warrington</p>
+    </div>
+
+    <!-- Add Walk button -->
+    <button class="add-btn add-btn-walk" id="toggleAddWalk">
+      <span class="icon">+</span> Add a heritage walk
+    </button>
+
+    <!-- Add Walk form -->
+    <div class="form-panel" id="addWalkPanel">
+      <div class="form-group">
+        <label>Walk name *</label>
+        <input type="text" id="w-name" placeholder="e.g. Town Centre Heritage Walk" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="w-desc" placeholder="What will walkers see and experience on this route?"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="text" id="w-duration" placeholder="e.g. 1h 30min" />
+        </div>
+        <div class="form-group">
+          <label>Difficulty</label>
+          <select id="w-difficulty">
+            <option value="easy">Easy</option>
+            <option value="moderate">Moderate</option>
+            <option value="challenging">Challenging</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Cover photo URL (optional)</label>
+        <input type="url" id="w-photo" placeholder="https://…" />
+        <p class="form-hint">Paste a public image URL (e.g. Wikimedia Commons or Imgur)</p>
+      </div>
+
+      <!-- Route drawing -->
+      <div class="form-group">
+        <label>Route — draw on map *</label>
+        <div class="draw-info" id="drawInfo">Click "Start drawing" then click the map to add waypoints.</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="map-action-btn btn-draw" id="startDrawBtn" style="flex:1;">✏️ Start drawing</button>
+          <button class="map-action-btn btn-undo" id="undoPointBtn" disabled>↩ Undo</button>
+          <button class="map-action-btn btn-clear" id="clearRouteBtn" disabled>✕ Clear</button>
+        </div>
+        <div class="hint-box" id="drawHint">Click on the map to add waypoints along the route. Click "Stop" when done.</div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-submit" id="submitWalkBtn">Save walk</button>
+        <button class="btn-cancel" id="cancelAddWalk">Cancel</button>
+      </div>
+      <div class="form-error" id="walkFormError"></div>
+    </div>
+
+    <!-- Walk list -->
+    <div class="list-header">Saved walks — click to view on map</div>
+    <div id="walkList"></div>
+
+  </div><!-- /tab-walks -->
+
+</div><!-- /sidebar -->
+
+  <div id="map">
+    <!-- Walk info bar overlay -->
+    <div id="walkInfoBar">
+      <button class="close-bar" id="closeWalkBar">✕</button>
+      <strong id="walkBarName"></strong>
+      <div class="stats">
+        <span id="walkBarDist"></span>
+        <span id="walkBarDur"></span>
+        <span id="walkBarDiff"></span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
 
 <footer>
   Map tiles © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &nbsp;|&nbsp;
@@ -450,454 +556,612 @@
 </footer>
 
 <script>
-/* ─────────────────────────────────────────────
-   DATA
-───────────────────────────────────────────── */
-const builtinSites = [
-  {
-    name: "Warrington Town Hall (Bank Hall)",
-    lat: 53.3901, lng: -2.5877,
-    era: "c. 1750", category: "Civic", grade: "I",
-    description: "Originally built as 'Bank Hall' for Thomas Parr, designed by James Gibbs. Became Warrington Town Hall in 1872. The Grade I listed building sits behind the famous restored Golden Gates."
-  },
-  {
-    name: "The Golden Gates",
-    lat: 53.3899, lng: -2.5874,
-    era: "pre-1895", category: "Civic", grade: "II",
-    description: "Magnificent ornate iron gates fronting the Town Hall, recently restored. A beloved landmark of Warrington and part of the Town Hall Conservation Area."
-  },
-  {
-    name: "Sankey Viaduct",
-    lat: 53.4475, lng: -2.6508,
-    era: "1830", category: "Industrial", grade: "II*",
-    description: "Built by George Stephenson, this is the world's earliest surviving major railway viaduct, constructed for the Liverpool and Manchester Railway. A landmark of industrial heritage."
-  },
-  {
-    name: "St Elphin's Church",
-    lat: 53.3908, lng: -2.5802,
-    era: "Medieval (rebuilt 1859)", category: "Religious", grade: "I",
-    description: "One of the oldest churches in Warrington, dedicated to St Elphin, a 7th-century bishop. The current structure was largely rebuilt in the Victorian era but retains its medieval steeple."
-  },
-  {
-    name: "Lymm Cross",
-    lat: 53.3749, lng: -2.4757,
-    era: "17th century", category: "Village Heritage", grade: "I",
-    description: "A Grade I listed 17th-century sandstone cross that forms the focal point of Lymm village, which itself appeared in the Domesday Book. Surrounded by historic village buildings."
-  },
-  {
-    name: "Walton Hall",
-    lat: 53.3623, lng: -2.5456,
-    era: "19th century", category: "Country House", grade: "II",
-    description: "A Victorian country house set within Walton Gardens. Now used as a heritage centre and events venue, the hall and its grounds are a popular destination in south Warrington."
-  },
-  {
-    name: "Warrington Museum & Library",
-    lat: 53.3897, lng: -2.5969,
-    era: "1857", category: "Civic", grade: "II",
-    description: "Home to one of the oldest public libraries in England. The museum holds important local history collections. The library movement in Warrington was pioneering in the UK."
-  },
-  {
-    name: "The Barley Mow",
-    lat: 53.3893, lng: -2.5955,
-    era: "1561", category: "Historic Inn", grade: "other",
-    description: "The oldest building in Warrington town centre, dating to 1561. This timber-framed building in Golden Square has survived centuries of change and is a remarkable example of Tudor architecture."
-  },
-  {
-    name: "Bewsey Old Hall",
-    lat: 53.3992, lng: -2.6298,
-    era: "Medieval", category: "Manor", grade: "II*",
-    description: "The remains of a moated medieval manor house, home to the Boteler family for centuries. The surviving gatehouse and moat are remnants of a once-grand fortified hall, visible within a nature park."
-  },
-  {
-    name: "Warrington Academy (site)",
-    lat: 53.3903, lng: -2.5930,
-    era: "1757", category: "Education", grade: "other",
-    description: "The Warrington Academy, founded in 1757, was one of England's leading Dissenting academies. It attracted notable thinkers including Joseph Priestley. A key chapter in Enlightenment-era education."
-  },
-  {
-    name: "St Mary's Church, Lymm",
-    lat: 53.3763, lng: -2.4740,
-    era: "12th century", category: "Religious", grade: "II*",
-    description: "A parish church with origins in the 12th century, featuring Norman and medieval architectural elements. The church overlooks the village dam and is central to Lymm's historic character."
-  },
-  {
-    name: "Risley Moss (Prehistoric landscape)",
-    lat: 53.4285, lng: -2.5640,
-    era: "Prehistoric", category: "Prehistoric", grade: "other",
-    description: "An ancient raised bog with evidence of prehistoric human activity. Risley Moss is a Site of Special Scientific Interest and holds archaeological significance as a preserved wetland landscape."
-  }
-];
-
-/* ─────────────────────────────────────────────
-   CONSTANTS & HELPERS
-───────────────────────────────────────────── */
-const gradeLabels = { "I": "Grade I", "II*": "Grade II*", "II": "Grade II", "other": "Notable" };
-const gradeClass  = { "I": "badge-I", "II*": "badge-II-star", "II": "badge-II", "other": "badge-other" };
-
-const catColour = {
-  "Civic":           "#2c6e8a",
-  "Industrial":      "#7a4a1a",
-  "Religious":       "#6a2a6a",
-  "Village Heritage":"#2a6a3a",
-  "Country House":   "#4a5a2a",
-  "Historic Inn":    "#8a3a2a",
-  "Manor":           "#4a2a6a",
-  "Education":       "#2a4a6a",
-  "Prehistoric":     "#5a5a2a"
-};
-
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
 function esc(str) {
   return String(str || '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function markerColour(site) {
-  if (site.isUser) return '#b8860b';
-  return catColour[site.category] || '#555';
+function haversineMiles(coords) {
+  if (coords.length < 2) return 0;
+  let total = 0;
+  for (let i = 1; i < coords.length; i++) {
+    const [lat1,lon1] = coords[i-1], [lat2,lon2] = coords[i];
+    const R = 3958.8;
+    const dLat = (lat2-lat1)*Math.PI/180;
+    const dLon = (lon2-lon1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    total += 2*R*Math.asin(Math.sqrt(a));
+  }
+  return total;
 }
 
-function makeIcon(site) {
-  const colour = markerColour(site);
-  const inner = site.isUser
+/* ════════════════════════════════════════
+   BUILTIN SITES DATA
+════════════════════════════════════════ */
+const builtinSites = [
+  { name:"Warrington Town Hall (Bank Hall)", lat:53.3901, lng:-2.5877, era:"c. 1750", category:"Civic", grade:"I", description:"Originally built as 'Bank Hall' for Thomas Parr, designed by James Gibbs. Became Warrington Town Hall in 1872. The Grade I listed building sits behind the famous restored Golden Gates." },
+  { name:"The Golden Gates", lat:53.3899, lng:-2.5874, era:"pre-1895", category:"Civic", grade:"II", description:"Magnificent ornate iron gates fronting the Town Hall, recently restored. A beloved landmark of Warrington and part of the Town Hall Conservation Area." },
+  { name:"Sankey Viaduct", lat:53.4475, lng:-2.6508, era:"1830", category:"Industrial", grade:"II*", description:"Built by George Stephenson, this is the world's earliest surviving major railway viaduct, constructed for the Liverpool and Manchester Railway. A landmark of industrial heritage." },
+  { name:"St Elphin's Church", lat:53.3908, lng:-2.5802, era:"Medieval (rebuilt 1859)", category:"Religious", grade:"I", description:"One of the oldest churches in Warrington, dedicated to St Elphin, a 7th-century bishop. The current structure was largely rebuilt in the Victorian era but retains its medieval steeple." },
+  { name:"Lymm Cross", lat:53.3749, lng:-2.4757, era:"17th century", category:"Village Heritage", grade:"I", description:"A Grade I listed 17th-century sandstone cross that forms the focal point of Lymm village, which itself appeared in the Domesday Book." },
+  { name:"Walton Hall", lat:53.3623, lng:-2.5456, era:"19th century", category:"Country House", grade:"II", description:"A Victorian country house set within Walton Gardens. Now used as a heritage centre and events venue, a popular destination in south Warrington." },
+  { name:"Warrington Museum & Library", lat:53.3897, lng:-2.5969, era:"1857", category:"Civic", grade:"II", description:"Home to one of the oldest public libraries in England. The museum holds important local history collections and natural history specimens." },
+  { name:"The Barley Mow", lat:53.3893, lng:-2.5955, era:"1561", category:"Historic Inn", grade:"other", description:"The oldest building in Warrington town centre, dating to 1561. This timber-framed building in Golden Square is a remarkable example of Tudor architecture." },
+  { name:"Bewsey Old Hall", lat:53.3992, lng:-2.6298, era:"Medieval", category:"Manor", grade:"II*", description:"The remains of a moated medieval manor house, home to the Boteler family for centuries. The surviving gatehouse and moat are visible within a nature park." },
+  { name:"Warrington Academy (site)", lat:53.3903, lng:-2.5930, era:"1757", category:"Education", grade:"other", description:"The Warrington Academy, founded in 1757, was one of England's leading Dissenting academies. It attracted notable thinkers including Joseph Priestley." },
+  { name:"St Mary's Church, Lymm", lat:53.3763, lng:-2.4740, era:"12th century", category:"Religious", grade:"II*", description:"A parish church with origins in the 12th century, featuring Norman and medieval architectural elements. The church overlooks the village dam in Lymm." },
+  { name:"Risley Moss (Prehistoric landscape)", lat:53.4285, lng:-2.5640, era:"Prehistoric", category:"Prehistoric", grade:"other", description:"An ancient raised bog with evidence of prehistoric human activity and a Site of Special Scientific Interest." }
+];
+
+/* ════════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════════ */
+const gradeLabels = { "I":"Grade I","II*":"Grade II*","II":"Grade II","other":"Notable" };
+const gradeClass  = { "I":"badge-I","II*":"badge-II-star","II":"badge-II","other":"badge-other" };
+const catColour   = {
+  "Civic":"#2c6e8a","Industrial":"#7a4a1a","Religious":"#6a2a6a",
+  "Village Heritage":"#2a6a3a","Country House":"#4a5a2a","Historic Inn":"#8a3a2a",
+  "Manor":"#4a2a6a","Education":"#2a4a6a","Prehistoric":"#5a5a2a"
+};
+const diffBadge = { easy:"badge-easy", moderate:"badge-moderate", challenging:"badge-challenging" };
+
+/* ════════════════════════════════════════
+   PERSISTENCE
+════════════════════════════════════════ */
+const SITES_KEY = 'warrington-user-sites-v1';
+const WALKS_KEY = 'warrington-user-walks-v1';
+
+function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)||'[]'); } catch(e) { return []; } }
+function saveJSON(key, arr) { localStorage.setItem(key, JSON.stringify(arr)); }
+
+let userSites = loadJSON(SITES_KEY).map(s => ({...s, isUser:true}));
+let userWalks = loadJSON(WALKS_KEY);
+
+/* ════════════════════════════════════════
+   MAP
+════════════════════════════════════════ */
+const map = L.map('map').setView([53.3950,-2.5700],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19, attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+/* ════════════════════════════════════════
+   SITE ICONS & MARKERS
+════════════════════════════════════════ */
+function makeSiteIcon(site) {
+  const colour = site.isUser ? '#b8860b' : (catColour[site.category]||'#555');
+  const inner  = site.isUser
     ? `<text x="12" y="17" text-anchor="middle" font-size="11" fill="#fff" font-family="Arial" font-weight="bold">★</text>`
     : `<circle cx="12" cy="12" r="5" fill="#fff" fill-opacity="0.85"/>`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
-    <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z"
-          fill="${colour}" stroke="#fff" stroke-width="1.5"/>
-    ${inner}
-  </svg>`;
-  return L.divIcon({ html: svg, className: '', iconSize: [24,36], iconAnchor: [12,36], popupAnchor: [0,-34] });
+    <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z" fill="${colour}" stroke="#fff" stroke-width="1.5"/>
+    ${inner}</svg>`;
+  return L.divIcon({html:svg,className:'',iconSize:[24,36],iconAnchor:[12,36],popupAnchor:[0,-34]});
 }
 
-function buildPopupHTML(site) {
+function sitePopupHTML(site) {
   let h = '';
-  if (site.photo) {
-    h += `<img class="popup-img" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
-  }
+  if (site.photo) h += `<img class="popup-img" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
   h += `<div class="popup-title">${esc(site.name)}</div>`;
-  h += `<div class="popup-era">${esc(site.era || '')}${site.era && site.category ? ' · ' : ''}${esc(site.category)}</div>`;
+  h += `<div class="popup-era">${esc(site.era||'')}${site.era&&site.category?' · ':''}${esc(site.category)}</div>`;
   h += `<div class="popup-desc">${esc(site.description)}</div>`;
-  h += `<div class="popup-badge">`;
-  h += `<span class="badge ${gradeClass[site.grade] || 'badge-other'}">${gradeLabels[site.grade] || 'Notable'}</span>`;
-  if (site.isUser) h += ` <span class="badge badge-user">★ Added by you</span>`;
+  h += `<div class="popup-badge"><span class="badge ${gradeClass[site.grade]||'badge-other'}">${gradeLabels[site.grade]||'Notable'}</span>`;
+  if (site.isUser) h += ` <span class="badge badge-user">★ Added</span>`;
   h += `</div>`;
-  if (site.linkUrl) {
-    h += `<a class="popup-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel || 'More information →')}</a>`;
-  }
+  if (site.linkUrl) h += `<a class="popup-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel||'More information →')}</a>`;
   return h;
 }
 
-/* ─────────────────────────────────────────────
-   USER SITES — localStorage persistence
-───────────────────────────────────────────── */
-const STORAGE_KEY = 'warrington-user-sites-v1';
-
-function loadUserSites() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-  catch(e) { return []; }
-}
-function saveUserSites(arr) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
-
-let userSites = loadUserSites().map(s => ({ ...s, isUser: true }));
-
-function allSites() { return [...builtinSites, ...userSites]; }
-
-/* ─────────────────────────────────────────────
-   MAP SETUP
-───────────────────────────────────────────── */
-const map = L.map('map').setView([53.3950, -2.5700], 12);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-/* ─────────────────────────────────────────────
-   MARKERS
-───────────────────────────────────────────── */
-let markers = []; // { site, marker }
+let siteMarkers = []; // {site, marker}
 let activeFilters = new Set();
 
 function addSiteMarker(site) {
-  const marker = L.marker([site.lat, site.lng], { icon: makeIcon(site) });
-  marker.bindPopup(buildPopupHTML(site), { maxWidth: 270 });
-  if (activeFilters.has(site.category)) marker.addTo(map);
-  markers.push({ site, marker });
-  return marker;
+  const m = L.marker([site.lat,site.lng],{icon:makeSiteIcon(site)});
+  m.bindPopup(sitePopupHTML(site),{maxWidth:270});
+  if (activeFilters.has(site.category)) m.addTo(map);
+  siteMarkers.push({site,marker:m});
 }
 
-function initMarkers() {
-  markers.forEach(({ marker }) => map.removeLayer(marker));
-  markers = [];
-  allSites().forEach(s => addSiteMarker(s));
+function allSites() { return [...builtinSites,...userSites]; }
+
+/* ════════════════════════════════════════
+   WALK LAYERS
+════════════════════════════════════════ */
+const walkLayers = {}; // id → {polyline, startM, endM}
+let selectedWalkId = null;
+
+function addWalkLayer(walk) {
+  if (!walk.waypoints || walk.waypoints.length < 2) return;
+  const pl = L.polyline(walk.waypoints,{
+    color:'#c03020', dashArray:'10 6', weight:3, opacity:0.45
+  }).addTo(map);
+  pl.on('click',()=>selectWalk(walk.id));
+  walkLayers[walk.id] = {polyline:pl, startM:null, endM:null};
 }
 
-/* ─────────────────────────────────────────────
+function selectWalk(id) {
+  // Deselect previous
+  if (selectedWalkId && walkLayers[selectedWalkId]) {
+    const prev = walkLayers[selectedWalkId];
+    prev.polyline.setStyle({opacity:0.45,weight:3});
+    if (prev.startM){map.removeLayer(prev.startM);prev.startM=null;}
+    if (prev.endM)  {map.removeLayer(prev.endM);  prev.endM=null;}
+  }
+  selectedWalkId = id;
+  const walk = userWalks.find(w=>w.id===id);
+  if (!walk||!walkLayers[id]) return;
+
+  const layer = walkLayers[id];
+  layer.polyline.setStyle({opacity:1,weight:5});
+
+  const pts = walk.waypoints;
+  layer.startM = L.circleMarker(pts[0],{
+    radius:8,color:'#1a6a1a',fillColor:'#3a9a3a',fillOpacity:1,weight:2
+  }).bindTooltip('Start',{permanent:false}).addTo(map);
+  layer.endM = L.circleMarker(pts[pts.length-1],{
+    radius:8,color:'#8a1a1a',fillColor:'#c03020',fillOpacity:1,weight:2
+  }).bindTooltip('End',{permanent:false}).addTo(map);
+
+  map.fitBounds(layer.polyline.getBounds(),{padding:[50,50]});
+
+  // Show info bar
+  document.getElementById('walkBarName').textContent = walk.name;
+  document.getElementById('walkBarDist').textContent = walk.distance ? `📏 ${walk.distance.toFixed(1)} miles` : '';
+  document.getElementById('walkBarDur').textContent  = walk.duration  ? `⏱ ${walk.duration}` : '';
+  document.getElementById('walkBarDiff').textContent = walk.difficulty ? walk.difficulty.charAt(0).toUpperCase()+walk.difficulty.slice(1) : '';
+  document.getElementById('walkInfoBar').style.display = 'block';
+
+  // Highlight card
+  document.querySelectorAll('.walk-card').forEach(c=>c.classList.remove('active'));
+  const card = document.querySelector(`.walk-card[data-id="${id}"]`);
+  if (card) { card.classList.add('active'); card.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+document.getElementById('closeWalkBar').addEventListener('click',()=>{
+  document.getElementById('walkInfoBar').style.display='none';
+  // Deselect
+  if (selectedWalkId && walkLayers[selectedWalkId]) {
+    const l = walkLayers[selectedWalkId];
+    l.polyline.setStyle({opacity:0.45,weight:3});
+    if (l.startM){map.removeLayer(l.startM);l.startM=null;}
+    if (l.endM)  {map.removeLayer(l.endM);  l.endM=null;}
+    selectedWalkId=null;
+  }
+  document.querySelectorAll('.walk-card').forEach(c=>c.classList.remove('active'));
+});
+
+/* ════════════════════════════════════════
    FILTER BUTTONS
-───────────────────────────────────────────── */
+════════════════════════════════════════ */
 const filterContainer = document.getElementById('filterButtons');
 
 function buildFilterButtons() {
-  const cats = [...new Set(allSites().map(s => s.category))];
-  // Preserve existing active state
-  const prev = new Set(activeFilters);
-  // Any new category is active by default
-  cats.forEach(c => { if (!prev.has(c)) activeFilters.add(c); });
-  // Remove gone categories
-  [...activeFilters].forEach(c => { if (!cats.includes(c)) activeFilters.delete(c); });
+  const cats = [...new Set(allSites().map(s=>s.category))];
+  cats.forEach(c=>{ if(!activeFilters.has(c)) activeFilters.add(c); });
+  [...activeFilters].forEach(c=>{ if(!cats.includes(c)) activeFilters.delete(c); });
 
-  filterContainer.innerHTML = '';
-  cats.forEach(cat => {
+  filterContainer.innerHTML='';
+  cats.forEach(cat=>{
     const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (activeFilters.has(cat) ? ' on' : '');
+    btn.className = 'filter-btn'+(activeFilters.has(cat)?' on':'');
     btn.textContent = cat;
-    btn.addEventListener('click', () => {
-      if (activeFilters.has(cat)) { activeFilters.delete(cat); btn.classList.remove('on'); }
-      else { activeFilters.add(cat); btn.classList.add('on'); }
-      updateMarkerVisibility();
-      buildCards();
+    btn.addEventListener('click',()=>{
+      if(activeFilters.has(cat)){activeFilters.delete(cat);btn.classList.remove('on');}
+      else{activeFilters.add(cat);btn.classList.add('on');}
+      siteMarkers.forEach(({site,marker})=>{
+        if(activeFilters.has(site.category)) marker.addTo(map); else map.removeLayer(marker);
+      });
+      buildSiteCards();
     });
     filterContainer.appendChild(btn);
   });
 }
 
-function updateMarkerVisibility() {
-  markers.forEach(({ site, marker }) => {
-    if (activeFilters.has(site.category)) marker.addTo(map);
-    else map.removeLayer(marker);
-  });
+/* ════════════════════════════════════════
+   TABS
+════════════════════════════════════════ */
+function switchTab(tab) {
+  document.getElementById('tab-sites').classList.toggle('hidden', tab!=='sites');
+  document.getElementById('tab-walks').classList.toggle('hidden', tab!=='walks');
+  document.getElementById('tab-sites-btn').classList.toggle('active', tab==='sites');
+  document.getElementById('tab-walks-btn').classList.toggle('active', tab==='walks');
 }
+document.getElementById('tab-sites-btn').addEventListener('click',()=>switchTab('sites'));
+document.getElementById('tab-walks-btn').addEventListener('click',()=>switchTab('walks'));
 
-/* ─────────────────────────────────────────────
-   SIDEBAR CARDS
-───────────────────────────────────────────── */
-const siteList    = document.getElementById('siteList');
-const siteCount   = document.getElementById('siteCount');
+/* ════════════════════════════════════════
+   SITE CARDS
+════════════════════════════════════════ */
+function buildSiteCards() {
+  const siteList = document.getElementById('siteList');
+  siteList.innerHTML='';
+  const visible = allSites().filter(s=>activeFilters.has(s.category));
+  document.getElementById('siteCount').textContent =
+    `${visible.length} site${visible.length===1?'':'s'} — click to locate on map`;
 
-function buildCards() {
-  siteList.innerHTML = '';
-  const visible = allSites().filter(s => activeFilters.has(s.category));
-  siteCount.textContent = `${visible.length} site${visible.length === 1 ? '' : 's'} — click to locate on map`;
-
-  if (visible.length === 0) {
-    siteList.innerHTML = '<p style="padding:16px;font-size:0.8rem;color:#8a7a60;font-family:Arial,sans-serif;">No sites match current filters.</p>';
+  if (!visible.length) {
+    siteList.innerHTML='<p style="padding:14px;font-size:0.78rem;color:#8a7a60;font-family:Arial,sans-serif;">No sites match current filters.</p>';
     return;
   }
 
-  visible.forEach(site => {
+  visible.forEach(site=>{
     const card = document.createElement('div');
-    card.className = 'site-card' + (site.isUser ? ' user-added' : '');
+    card.className = 'site-card'+(site.isUser?' user-added':'');
 
-    let html = '';
-    if (site.photo) html += `<img class="thumb" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
+    let html='';
+    if(site.photo) html+=`<img class="thumb" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
+    html+=`<div class="card-top"><h3>${esc(site.name)}</h3>${site.isUser?`<button class="delete-btn" data-id="${esc(site.id)}">✕</button>`:''}</div>`;
+    html+=`<div class="card-era">${esc(site.era||'')}${site.era&&site.category?' · ':''}${esc(site.category)}</div>`;
+    html+=`<p class="card-desc">${esc(site.description).slice(0,108)}${site.description.length>108?'…':''}</p>`;
+    html+=`<span class="badge ${gradeClass[site.grade]||'badge-other'}">${gradeLabels[site.grade]||'Notable'}</span>`;
+    if(site.isUser) html+=` <span class="badge badge-user">★ Added</span>`;
+    if(site.linkUrl) html+=`<a class="card-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel||'More information →')}</a>`;
 
-    html += `<div class="card-top">
-      <h3>${esc(site.name)}</h3>
-      ${site.isUser ? `<button class="delete-btn" title="Remove this site" data-id="${esc(site.id)}">✕</button>` : ''}
-    </div>`;
-    html += `<div class="era">${esc(site.era || '')}${site.era && site.category ? ' · ' : ''}${esc(site.category)}</div>`;
-    html += `<p>${esc(site.description).slice(0, 110)}${site.description.length > 110 ? '…' : ''}</p>`;
-    html += `<span class="badge ${gradeClass[site.grade] || 'badge-other'}">${gradeLabels[site.grade] || 'Notable'}</span>`;
-    if (site.isUser) html += ` <span class="badge badge-user">★ Added</span>`;
-    if (site.linkUrl) {
-      html += `<div class="card-links"><a class="card-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel || 'More information →')}</a></div>`;
-    }
-
-    card.innerHTML = html;
-
-    // Click to fly to
-    card.addEventListener('click', (e) => {
-      if (e.target.classList.contains('delete-btn') || e.target.classList.contains('card-link')) return;
-      document.querySelectorAll('.site-card').forEach(c => c.classList.remove('active'));
+    card.innerHTML=html;
+    card.addEventListener('click',e=>{
+      if(e.target.classList.contains('delete-btn')||e.target.classList.contains('card-link')) return;
+      document.querySelectorAll('.site-card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active');
-      const entry = markers.find(m => m.site === site);
-      if (entry) {
-        map.setView([site.lat, site.lng], 16, { animate: true });
-        entry.marker.openPopup();
-      }
+      const entry=siteMarkers.find(m=>m.site===site);
+      if(entry){map.setView([site.lat,site.lng],16,{animate:true});entry.marker.openPopup();}
     });
 
-    // Delete button
-    const delBtn = card.querySelector('.delete-btn');
-    if (delBtn) {
-      delBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!confirm(`Remove "${site.name}" from the map?`)) return;
-        userSites = userSites.filter(s => s.id !== site.id);
-        saveUserSites(userSites.map(({ isUser, ...rest }) => rest));
-        const entry = markers.find(m => m.site === site);
-        if (entry) { map.removeLayer(entry.marker); markers = markers.filter(m => m.site !== site); }
-        buildFilterButtons();
-        buildCards();
-      });
-    }
+    const del=card.querySelector('.delete-btn');
+    if(del) del.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm(`Remove "${site.name}"?`)) return;
+      userSites=userSites.filter(s=>s.id!==site.id);
+      saveJSON(SITES_KEY, userSites.map(({isUser,...r})=>r));
+      const entry=siteMarkers.find(m=>m.site===site);
+      if(entry){map.removeLayer(entry.marker);siteMarkers=siteMarkers.filter(m=>m.site!==site);}
+      buildFilterButtons();buildSiteCards();
+    });
 
-    siteList.appendChild(card);
+    document.getElementById('siteList').appendChild(card);
   });
 }
 
-/* ─────────────────────────────────────────────
-   INIT
-───────────────────────────────────────────── */
-// Seed active filters with all builtin categories first
-builtinSites.forEach(s => activeFilters.add(s.category));
-userSites.forEach(s => activeFilters.add(s.category));
+/* ════════════════════════════════════════
+   WALK CARDS
+════════════════════════════════════════ */
+function buildWalkCards() {
+  const walkList=document.getElementById('walkList');
+  walkList.innerHTML='';
+  document.getElementById('tab-walks-btn').textContent =
+    `👣 Walks${userWalks.length?` (${userWalks.length})`:''}`;
 
-initMarkers();
-buildFilterButtons();
-buildCards();
+  if(!userWalks.length){
+    walkList.innerHTML=`<div style="padding:24px 16px;text-align:center;">
+      <p style="font-size:0.82rem;color:#8a7a60;font-family:Arial,sans-serif;line-height:1.7;">
+        No walks added yet.<br>Click <strong>Add a heritage walk</strong><br>to plot your first route.
+      </p></div>`;
+    return;
+  }
 
-/* ─────────────────────────────────────────────
-   ADD SITE FORM
-───────────────────────────────────────────── */
-const toggleBtn     = document.getElementById('toggleAddSite');
-const panel         = document.getElementById('addSitePanel');
-const cancelBtn     = document.getElementById('cancelAddSite');
-const submitBtn     = document.getElementById('submitSiteBtn');
-const formError     = document.getElementById('formError');
-const pickMapBtn    = document.getElementById('pickMapBtn');
-const pickHint      = document.getElementById('pickHint');
-const catSelect     = document.getElementById('f-category');
-const catCustom     = document.getElementById('f-category-custom');
+  userWalks.forEach(walk=>{
+    const card=document.createElement('div');
+    card.className='walk-card';
+    card.dataset.id=walk.id;
 
-let pickingMode = false;
+    let html='';
+    if(walk.photo) html+=`<img class="thumb" src="${esc(walk.photo)}" alt="" onerror="this.style.display='none'" />`;
+    html+=`<div class="card-top"><h3>${esc(walk.name)}</h3><button class="delete-btn" data-id="${esc(walk.id)}">✕</button></div>`;
+    html+=`<div class="card-meta">`;
+    if(walk.distance) html+=`<span>📏 ${walk.distance.toFixed(1)} mi</span>`;
+    if(walk.duration) html+=`<span>⏱ ${esc(walk.duration)}</span>`;
+    html+=`</div>`;
+    if(walk.description) html+=`<p class="card-desc">${esc(walk.description).slice(0,100)}${walk.description.length>100?'…':''}</p>`;
+    if(walk.difficulty) html+=`<span class="badge ${diffBadge[walk.difficulty]||'badge-other'}">${walk.difficulty.charAt(0).toUpperCase()+walk.difficulty.slice(1)}</span>`;
+
+    card.innerHTML=html;
+    card.addEventListener('click',e=>{
+      if(e.target.classList.contains('delete-btn')) return;
+      switchTab('walks');
+      selectWalk(walk.id);
+    });
+
+    const del=card.querySelector('.delete-btn');
+    del.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm(`Remove the walk "${walk.name}"?`)) return;
+      if(walkLayers[walk.id]){
+        const l=walkLayers[walk.id];
+        map.removeLayer(l.polyline);
+        if(l.startM) map.removeLayer(l.startM);
+        if(l.endM)   map.removeLayer(l.endM);
+        delete walkLayers[walk.id];
+      }
+      if(selectedWalkId===walk.id){
+        selectedWalkId=null;
+        document.getElementById('walkInfoBar').style.display='none';
+      }
+      userWalks=userWalks.filter(w=>w.id!==walk.id);
+      saveJSON(WALKS_KEY,userWalks);
+      buildWalkCards();
+    });
+
+    walkList.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════
+   MAP MODE  (none | pick-site | draw-walk)
+════════════════════════════════════════ */
+let mapMode = 'none';
+let drawPoints = [];
+let drawPolyline = null;
+let drawDotMarkers = [];
 let tempPickMarker = null;
 
-function openPanel() {
-  panel.classList.add('open');
-  toggleBtn.querySelector('span').textContent = '✕';
-  toggleBtn.style.background = '#524232';
-}
-function closePanel() {
-  panel.classList.remove('open');
-  toggleBtn.querySelector('span').textContent = '★';
-  toggleBtn.style.background = '';
-  exitPickMode();
-  formError.style.display = 'none';
-}
-function resetForm() {
-  ['f-name','f-era','f-desc','f-photo','f-link-url','f-link-label','f-lat','f-lng'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  catSelect.value = 'Civic';
-  catCustom.style.display = 'none';
-  catCustom.value = '';
-  document.getElementById('f-grade').value = 'other';
-  formError.style.display = 'none';
-  if (tempPickMarker) { map.removeLayer(tempPickMarker); tempPickMarker = null; }
+function leafletContainer() { return document.querySelector('.leaflet-container'); }
+
+function setMapMode(mode) {
+  mapMode = mode;
+  const lc = leafletContainer();
+  if (mode==='none'||mode==='pick-site') {
+    lc.classList.remove('map-picking');
+    if (mode==='pick-site') lc.classList.add('map-picking');
+  } else if (mode==='draw-walk') {
+    lc.classList.add('map-picking');
+  }
 }
 
-toggleBtn.addEventListener('click', () => {
-  if (panel.classList.contains('open')) { closePanel(); resetForm(); }
-  else openPanel();
-});
-cancelBtn.addEventListener('click', () => { closePanel(); resetForm(); });
-
-// Show/hide custom category input
-catSelect.addEventListener('change', () => {
-  catCustom.style.display = catSelect.value === '__custom__' ? 'block' : 'none';
-});
-
-// Pick mode
-function enterPickMode() {
-  pickingMode = true;
-  pickMapBtn.textContent = '✕ Cancel picking';
-  pickMapBtn.classList.add('picking');
-  pickHint.style.display = 'block';
-  document.querySelector('.leaflet-container').classList.add('map-picking');
-}
-function exitPickMode() {
-  pickingMode = false;
-  pickMapBtn.textContent = '📍 Click on map to set location';
-  pickMapBtn.classList.remove('picking');
-  pickHint.style.display = 'none';
-  document.querySelector('.leaflet-container').classList.remove('map-picking');
-}
-
-pickMapBtn.addEventListener('click', () => {
-  if (pickingMode) exitPickMode();
-  else {
-    openPanel();
-    enterPickMode();
-    // Scroll map into view hint
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+map.on('click', e=>{
+  if (mapMode==='pick-site') {
+    const {lat,lng}=e.latlng;
+    document.getElementById('f-lat').value=lat.toFixed(6);
+    document.getElementById('f-lng').value=lng.toFixed(6);
+    if(tempPickMarker) map.removeLayer(tempPickMarker);
+    tempPickMarker=L.circleMarker([lat,lng],{radius:8,color:'#b8860b',fillColor:'#b8860b',fillOpacity:0.6,weight:2}).addTo(map);
+    document.getElementById('pickHint').style.display='none';
+    document.getElementById('pickMapBtn').classList.remove('active');
+    document.getElementById('pickMapBtn').textContent='📍 Click on map to set location';
+    setMapMode('none');
+  } else if (mapMode==='draw-walk') {
+    const pt=[e.latlng.lat,e.latlng.lng];
+    drawPoints.push(pt);
+    const dot=L.circleMarker(pt,{radius:5,color:'#c03020',fillColor:'#ff7060',fillOpacity:0.9,weight:2}).addTo(map);
+    drawDotMarkers.push(dot);
+    if(drawPolyline) map.removeLayer(drawPolyline);
+    if(drawPoints.length>=2){
+      drawPolyline=L.polyline(drawPoints,{color:'#c03020',dashArray:'10 6',weight:3,opacity:0.85}).addTo(map);
+    }
+    updateDrawUI();
   }
 });
 
-map.on('click', (e) => {
-  if (!pickingMode) return;
-  const { lat, lng } = e.latlng;
-  document.getElementById('f-lat').value = lat.toFixed(6);
-  document.getElementById('f-lng').value = lng.toFixed(6);
-  if (tempPickMarker) map.removeLayer(tempPickMarker);
-  tempPickMarker = L.circleMarker([lat, lng], {
-    radius: 8, color: '#b8860b', fillColor: '#b8860b', fillOpacity: 0.6, weight: 2
-  }).addTo(map);
-  exitPickMode();
+function updateDrawUI() {
+  const dist=haversineMiles(drawPoints);
+  const info=document.getElementById('drawInfo');
+  if(drawPoints.length===0) info.textContent='Click "Start drawing" then click the map to add waypoints.';
+  else if(drawPoints.length===1) info.textContent='1 waypoint added. Keep clicking to extend the route.';
+  else info.textContent=`${drawPoints.length} waypoints · ${dist.toFixed(2)} miles`;
+  document.getElementById('undoPointBtn').disabled = drawPoints.length===0;
+  document.getElementById('clearRouteBtn').disabled = drawPoints.length===0;
+}
+
+function clearDrawing() {
+  drawPoints=[];
+  drawDotMarkers.forEach(m=>map.removeLayer(m));
+  drawDotMarkers=[];
+  if(drawPolyline){map.removeLayer(drawPolyline);drawPolyline=null;}
+  updateDrawUI();
+}
+
+/* ════════════════════════════════════════
+   SITE FORM
+════════════════════════════════════════ */
+const addSitePanel = document.getElementById('addSitePanel');
+const siteFormError = document.getElementById('siteFormError');
+
+document.getElementById('toggleAddSite').addEventListener('click',()=>{
+  const open=addSitePanel.classList.toggle('open');
+  document.getElementById('toggleAddSite').querySelector('.icon').textContent=open?'✕':'★';
+  if(!open) resetSiteForm();
+});
+document.getElementById('cancelAddSite').addEventListener('click',()=>{
+  addSitePanel.classList.remove('open');
+  document.getElementById('toggleAddSite').querySelector('.icon').textContent='★';
+  resetSiteForm();
 });
 
-// Form submit
-submitBtn.addEventListener('click', () => {
-  const name  = document.getElementById('f-name').value.trim();
-  const desc  = document.getElementById('f-desc').value.trim();
-  const latV  = parseFloat(document.getElementById('f-lat').value);
-  const lngV  = parseFloat(document.getElementById('f-lng').value);
+document.getElementById('f-category').addEventListener('change',function(){
+  document.getElementById('f-category-custom').style.display = this.value==='__custom__'?'block':'none';
+});
 
-  if (!name) { showError('Please enter a site name.'); return; }
-  if (!desc) { showError('Please enter a description.'); return; }
-  if (isNaN(latV) || isNaN(lngV)) { showError('Please set a map location — use the "Click on map" button or enter coordinates manually.'); return; }
-  if (latV < 53.2 || latV > 53.6 || lngV < -2.9 || lngV > -2.2) {
-    if (!confirm('These coordinates look outside the Warrington area. Add anyway?')) return;
+document.getElementById('pickMapBtn').addEventListener('click',function(){
+  if(mapMode==='pick-site'){
+    setMapMode('none');
+    this.classList.remove('active');
+    this.textContent='📍 Click on map to set location';
+    document.getElementById('pickHint').style.display='none';
+  } else {
+    setMapMode('pick-site');
+    this.classList.add('active');
+    this.textContent='✕ Cancel picking';
+    document.getElementById('pickHint').style.display='block';
   }
+});
 
-  const cat = catSelect.value === '__custom__'
-    ? (catCustom.value.trim() || 'Other')
-    : catSelect.value;
+document.getElementById('submitSiteBtn').addEventListener('click',()=>{
+  const name =document.getElementById('f-name').value.trim();
+  const desc =document.getElementById('f-desc').value.trim();
+  const latV =parseFloat(document.getElementById('f-lat').value);
+  const lngV =parseFloat(document.getElementById('f-lng').value);
+  if(!name){showSiteError('Please enter a site name.'); return;}
+  if(!desc){showSiteError('Please enter a description.'); return;}
+  if(isNaN(latV)||isNaN(lngV)){showSiteError('Please set a map location using the button above.'); return;}
+  if(latV<53.2||latV>53.6||lngV<-2.9||lngV>-2.2){
+    if(!confirm('These coordinates look outside Warrington. Add anyway?')) return;
+  }
+  const cat=document.getElementById('f-category').value==='__custom__'
+    ?(document.getElementById('f-category-custom').value.trim()||'Other')
+    :document.getElementById('f-category').value;
 
-  const newSite = {
-    id:        Date.now().toString(),
-    isUser:    true,
+  const s={
+    id:Date.now().toString(), isUser:true,
+    name, era:document.getElementById('f-era').value.trim(), category:cat,
+    grade:document.getElementById('f-grade').value,
+    description:desc,
+    photo:document.getElementById('f-photo').value.trim(),
+    linkUrl:document.getElementById('f-link-url').value.trim(),
+    linkLabel:document.getElementById('f-link-label').value.trim(),
+    lat:latV, lng:lngV
+  };
+  userSites.push(s);
+  saveJSON(SITES_KEY, userSites.map(({isUser,...r})=>r));
+  activeFilters.add(cat);
+  addSiteMarker(s);
+  buildFilterButtons(); buildSiteCards();
+  if(tempPickMarker){map.removeLayer(tempPickMarker);tempPickMarker=null;}
+  map.setView([latV,lngV],16,{animate:true});
+  siteMarkers.find(m=>m.site===s)?.marker.openPopup();
+  addSitePanel.classList.remove('open');
+  document.getElementById('toggleAddSite').querySelector('.icon').textContent='★';
+  resetSiteForm();
+});
+
+function showSiteError(msg){siteFormError.textContent=msg;siteFormError.style.display='block';}
+
+function resetSiteForm(){
+  ['f-name','f-era','f-desc','f-photo','f-link-url','f-link-label','f-lat','f-lng'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-category').value='Civic';
+  document.getElementById('f-category-custom').style.display='none';
+  document.getElementById('f-grade').value='other';
+  siteFormError.style.display='none';
+  document.getElementById('pickHint').style.display='none';
+  document.getElementById('pickMapBtn').classList.remove('active');
+  document.getElementById('pickMapBtn').textContent='📍 Click on map to set location';
+  if(tempPickMarker){map.removeLayer(tempPickMarker);tempPickMarker=null;}
+  if(mapMode==='pick-site') setMapMode('none');
+}
+
+/* ════════════════════════════════════════
+   WALK FORM
+════════════════════════════════════════ */
+const addWalkPanel = document.getElementById('addWalkPanel');
+const walkFormError = document.getElementById('walkFormError');
+
+document.getElementById('toggleAddWalk').addEventListener('click',()=>{
+  const open=addWalkPanel.classList.toggle('open');
+  document.getElementById('toggleAddWalk').querySelector('.icon').textContent=open?'✕':'+';
+  if(!open) resetWalkForm();
+});
+document.getElementById('cancelAddWalk').addEventListener('click',()=>{
+  addWalkPanel.classList.remove('open');
+  document.getElementById('toggleAddWalk').querySelector('.icon').textContent='+';
+  resetWalkForm();
+});
+
+// Draw buttons
+const startDrawBtn = document.getElementById('startDrawBtn');
+startDrawBtn.addEventListener('click',()=>{
+  if(mapMode==='draw-walk'){
+    // Stop drawing
+    setMapMode('none');
+    startDrawBtn.textContent='✏️ Continue drawing';
+    startDrawBtn.classList.remove('active');
+    document.getElementById('drawHint').style.display='none';
+  } else {
+    switchTab('walks'); // make sure we're on the walks tab so panel is visible
+    setMapMode('draw-walk');
+    startDrawBtn.textContent='⏹ Stop drawing';
+    startDrawBtn.classList.add('active');
+    document.getElementById('drawHint').style.display='block';
+  }
+});
+
+document.getElementById('undoPointBtn').addEventListener('click',()=>{
+  if(!drawPoints.length) return;
+  drawPoints.pop();
+  const d=drawDotMarkers.pop();
+  if(d) map.removeLayer(d);
+  if(drawPolyline) map.removeLayer(drawPolyline);
+  drawPolyline = drawPoints.length>=2
+    ? L.polyline(drawPoints,{color:'#c03020',dashArray:'10 6',weight:3,opacity:0.85}).addTo(map)
+    : null;
+  updateDrawUI();
+  if(drawPoints.length===0){
+    startDrawBtn.textContent='✏️ Start drawing';
+    startDrawBtn.classList.remove('active');
+    setMapMode('none');
+  }
+});
+
+document.getElementById('clearRouteBtn').addEventListener('click',()=>{
+  if(!confirm('Clear the drawn route?')) return;
+  clearDrawing();
+  setMapMode('none');
+  startDrawBtn.textContent='✏️ Start drawing';
+  startDrawBtn.classList.remove('active');
+  document.getElementById('drawHint').style.display='none';
+});
+
+document.getElementById('submitWalkBtn').addEventListener('click',()=>{
+  const name=document.getElementById('w-name').value.trim();
+  if(!name){showWalkError('Please enter a walk name.'); return;}
+  if(drawPoints.length<2){showWalkError('Please draw the route on the map — at least 2 waypoints needed.'); return;}
+
+  // Exit draw mode
+  setMapMode('none');
+  startDrawBtn.textContent='✏️ Start drawing';
+  startDrawBtn.classList.remove('active');
+
+  const dist=haversineMiles(drawPoints);
+  const walk={
+    id:Date.now().toString(),
     name,
-    era:       document.getElementById('f-era').value.trim(),
-    category:  cat,
-    grade:     document.getElementById('f-grade').value,
-    description: desc,
-    photo:     document.getElementById('f-photo').value.trim(),
-    linkUrl:   document.getElementById('f-link-url').value.trim(),
-    linkLabel: document.getElementById('f-link-label').value.trim(),
-    lat:       latV,
-    lng:       lngV
+    description:document.getElementById('w-desc').value.trim(),
+    duration:document.getElementById('w-duration').value.trim(),
+    difficulty:document.getElementById('w-difficulty').value,
+    photo:document.getElementById('w-photo').value.trim(),
+    distance:parseFloat(dist.toFixed(2)),
+    waypoints:[...drawPoints]
   };
 
-  userSites.push(newSite);
-  saveUserSites(userSites.map(({ isUser, ...rest }) => rest));
+  userWalks.push(walk);
+  saveJSON(WALKS_KEY,userWalks);
 
-  activeFilters.add(cat);
-  addSiteMarker(newSite);
-  buildFilterButtons();
-  buildCards();
+  // Clear drawing preview and add permanent layer
+  clearDrawing();
+  addWalkLayer(walk);
+  buildWalkCards();
 
-  if (tempPickMarker) { map.removeLayer(tempPickMarker); tempPickMarker = null; }
-  map.setView([latV, lngV], 15, { animate: true });
-  const entry = markers.find(m => m.site === newSite);
-  if (entry) entry.marker.openPopup();
+  addWalkPanel.classList.remove('open');
+  document.getElementById('toggleAddWalk').querySelector('.icon').textContent='+';
+  resetWalkForm();
 
-  closePanel();
-  resetForm();
-
-  // Scroll new card into view
-  setTimeout(() => {
-    const cards = siteList.querySelectorAll('.site-card.user-added');
-    if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 400);
+  // Show the new walk on map
+  setTimeout(()=>selectWalk(walk.id),200);
 });
 
-function showError(msg) {
-  formError.textContent = msg;
-  formError.style.display = 'block';
+function showWalkError(msg){walkFormError.textContent=msg;walkFormError.style.display='block';}
+
+function resetWalkForm(){
+  ['w-name','w-desc','w-duration','w-photo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('w-difficulty').value='easy';
+  walkFormError.style.display='none';
+  document.getElementById('drawHint').style.display='none';
+  clearDrawing();
+  if(mapMode==='draw-walk') setMapMode('none');
+  startDrawBtn.textContent='✏️ Start drawing';
+  startDrawBtn.classList.remove('active');
+  updateDrawUI();
 }
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+allSites().forEach(s=>activeFilters.add(s.category));
+allSites().forEach(s=>addSiteMarker(s));
+userWalks.forEach(w=>addWalkLayer(w));
+buildFilterButtons();
+buildSiteCards();
+buildWalkCards();
 </script>
 </body>
 </html>
