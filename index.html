@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Historic Sites of Warrington, UK</title>
-
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-  <!-- Leaflet JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
   <style>
@@ -31,147 +28,177 @@
       gap: 16px;
       flex-shrink: 0;
     }
+    header h1 { font-size: 1.4rem; letter-spacing: 0.04em; }
+    header span { font-size: 0.85rem; opacity: 0.6; font-style: italic; }
 
-    header h1 {
-      font-size: 1.4rem;
-      letter-spacing: 0.04em;
-    }
+    .layout { display: flex; flex: 1; overflow: hidden; }
 
-    header span {
-      font-size: 0.85rem;
-      opacity: 0.6;
-      font-style: italic;
-    }
-
-    .layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* Sidebar */
+    /* ── Sidebar ── */
     #sidebar {
-      width: 300px;
+      width: 310px;
       flex-shrink: 0;
       overflow-y: auto;
       background: #faf7f2;
       border-right: 1px solid #d4c9b0;
+      display: flex;
+      flex-direction: column;
     }
 
-    .sidebar-header {
-      padding: 12px 16px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #7a6a50;
-      border-bottom: 1px solid #d4c9b0;
+    /* ── Add Site toggle button ── */
+    .add-site-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px 16px;
+      background: #3e3220;
+      color: #f5f0e8;
+      border: none;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      font-size: 0.88rem;
+      letter-spacing: 0.03em;
+      text-align: left;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .add-site-btn:hover { background: #524232; }
+    .add-site-btn .icon {
+      width: 22px; height: 22px;
+      background: #b8860b;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-style: normal; flex-shrink: 0;
+    }
+
+    /* ── Add Site form panel ── */
+    .add-site-panel {
+      display: none;
       background: #f0ebe0;
+      border-bottom: 2px solid #b0a070;
+      padding: 16px;
+      flex-shrink: 0;
+    }
+    .add-site-panel.open { display: block; }
+
+    .form-group { margin-bottom: 10px; }
+    .form-group label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #6a5a40;
+      margin-bottom: 3px;
+    }
+    .form-hint {
+      font-size: 0.67rem;
+      color: #8a7a60;
+      font-family: Arial, sans-serif;
+      margin-top: 3px;
+      font-style: italic;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #c0b090;
+      border-radius: 3px;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      font-size: 0.8rem;
+      color: #2c2416;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: #7a6a40; }
+    .form-group textarea { resize: vertical; min-height: 72px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .pick-map-btn {
+      width: 100%;
+      margin-top: 6px;
+      padding: 6px 10px;
+      background: #3a5a7a;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      transition: background 0.15s;
+    }
+    .pick-map-btn:hover { background: #2a4a6a; }
+    .pick-map-btn.picking { background: #b04a20; }
+
+    .pick-hint {
+      display: none;
+      font-size: 0.7rem;
+      color: #b04a20;
+      font-family: Arial, sans-serif;
+      margin-top: 5px;
+      padding: 5px 8px;
+      background: #fde8d8;
+      border-radius: 3px;
+      border: 1px solid #e0b090;
     }
 
-    .site-card {
-      padding: 14px 16px;
-      border-bottom: 1px solid #e8e0d0;
+    .form-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .btn-submit {
+      flex: 1;
+      padding: 9px;
+      background: #2c2416;
+      color: #f5f0e8;
+      border: none;
+      border-radius: 3px;
+      font-family: Georgia, serif;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: background 0.15s;
     }
-
-    .site-card:hover { background: #ede7d8; }
-    .site-card.active { background: #d9cdb8; }
-
-    .site-card h3 {
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-
-    .site-card .era {
-      font-size: 0.72rem;
-      color: #8a7a60;
-      font-style: italic;
-      margin-bottom: 5px;
-    }
-
-    .site-card p {
-      font-size: 0.78rem;
-      color: #5a4e3c;
-      line-height: 1.45;
+    .btn-submit:hover { background: #3e3420; }
+    .btn-cancel {
+      padding: 9px 14px;
+      background: none;
+      border: 1px solid #b0a080;
+      border-radius: 3px;
       font-family: Arial, sans-serif;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-family: Arial, sans-serif;
-      padding: 2px 7px;
-      border-radius: 10px;
-      margin-top: 6px;
-      font-weight: bold;
-      letter-spacing: 0.03em;
-    }
-
-    .badge-I    { background: #b5432a; color: #fff; }
-    .badge-II-star { background: #c97c2a; color: #fff; }
-    .badge-II   { background: #5a7a3a; color: #fff; }
-    .badge-other { background: #4a6a8a; color: #fff; }
-
-    /* Map */
-    #map {
-      flex: 1;
-    }
-
-    /* Popup styling */
-    .leaflet-popup-content-wrapper {
-      border-radius: 4px;
-      font-family: Georgia, serif;
-    }
-
-    .popup-title {
-      font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 4px;
-      color: #2c2416;
-    }
-
-    .popup-era {
-      font-size: 0.75rem;
-      color: #8a7a60;
-      font-style: italic;
-      margin-bottom: 6px;
-    }
-
-    .popup-desc {
       font-size: 0.8rem;
-      line-height: 1.5;
-      color: #3c3020;
+      cursor: pointer;
+      color: #6a5a40;
+    }
+    .btn-cancel:hover { background: #e0d8c8; }
+
+    .form-error {
+      display: none;
+      color: #c03020;
+      font-size: 0.75rem;
       font-family: Arial, sans-serif;
-      max-width: 220px;
-    }
-
-    .popup-badge {
       margin-top: 8px;
+      padding: 6px 8px;
+      background: #fde8e8;
+      border-radius: 3px;
+      border: 1px solid #e0a0a0;
     }
 
-    /* Filter bar */
+    /* ── Filter bar ── */
     .filter-bar {
       padding: 10px 16px;
       border-bottom: 1px solid #d4c9b0;
       background: #f0ebe0;
+      flex-shrink: 0;
     }
-
     .filter-bar label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.09em;
       color: #7a6a50;
       display: block;
       margin-bottom: 6px;
     }
-
-    .filter-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-
+    .filter-buttons { display: flex; flex-wrap: wrap; gap: 5px; }
     .filter-btn {
       font-size: 0.7rem;
       padding: 3px 10px;
@@ -182,25 +209,130 @@
       font-family: Arial, sans-serif;
       transition: all 0.15s;
     }
-
     .filter-btn.on { background: #2c2416; color: #f5f0e8; border-color: #2c2416; }
 
-    footer {
+    /* ── Sidebar header ── */
+    .sidebar-header {
+      padding: 10px 16px;
       font-size: 0.68rem;
-      text-align: center;
-      padding: 6px;
-      color: #8a7a60;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #7a6a50;
+      border-bottom: 1px solid #d4c9b0;
       background: #f0ebe0;
-      border-top: 1px solid #d4c9b0;
-      font-family: Arial, sans-serif;
       flex-shrink: 0;
     }
 
+    /* ── Site cards ── */
+    #siteList { overflow-y: auto; flex: 1; }
+
+    .site-card {
+      padding: 13px 16px;
+      border-bottom: 1px solid #e8e0d0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .site-card:hover { background: #ede7d8; }
+    .site-card.active { background: #d9cdb8; }
+    .site-card.user-added { border-left: 3px solid #b8860b; padding-left: 13px; }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+    .card-top h3 { font-size: 0.92rem; flex: 1; }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #a09080;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .delete-btn:hover { color: #c03020; }
+
+    .site-card .thumb {
+      width: 100%;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .site-card .era {
+      font-size: 0.71rem;
+      color: #8a7a60;
+      font-style: italic;
+      margin-bottom: 5px;
+      margin-top: 3px;
+    }
+    .site-card p {
+      font-size: 0.77rem;
+      color: #5a4e3c;
+      line-height: 1.45;
+      font-family: Arial, sans-serif;
+    }
+
+    .card-links {
+      margin-top: 7px;
+    }
+    .card-link {
+      font-size: 0.72rem;
+      color: #2a5a8a;
+      font-family: Arial, sans-serif;
+      text-decoration: none;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.64rem;
+      font-family: Arial, sans-serif;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-top: 6px;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+    .badge-I        { background: #b5432a; color: #fff; }
+    .badge-II-star  { background: #c97c2a; color: #fff; }
+    .badge-II       { background: #5a7a3a; color: #fff; }
+    .badge-other    { background: #4a6a8a; color: #fff; }
+    .badge-user     { background: #b8860b; color: #fff; }
+
+    /* ── Map ── */
+    #map { flex: 1; }
+
+    /* Pick mode cursor */
+    .leaflet-container.map-picking,
+    .leaflet-container.map-picking .leaflet-interactive { cursor: crosshair !important; }
+
+    /* ── Popups ── */
+    .leaflet-popup-content-wrapper { border-radius: 4px; font-family: Georgia, serif; }
+    .popup-img {
+      width: 100%; max-height: 120px; object-fit: cover;
+      border-radius: 3px; margin-bottom: 8px; display: block;
+    }
+    .popup-title { font-size: 1rem; font-weight: bold; margin-bottom: 3px; color: #2c2416; }
+    .popup-era { font-size: 0.73rem; color: #8a7a60; font-style: italic; margin-bottom: 6px; }
+    .popup-desc { font-size: 0.79rem; line-height: 1.5; color: #3c3020; font-family: Arial, sans-serif; max-width: 220px; }
+    .popup-badge { margin-top: 8px; }
+    .popup-link { display: block; margin-top: 8px; font-size: 0.74rem; color: #2a5a8a; font-family: Arial, sans-serif; text-decoration: none; }
+    .popup-link:hover { text-decoration: underline; }
+
+    footer {
+      font-size: 0.68rem; text-align: center; padding: 6px;
+      color: #8a7a60; background: #f0ebe0;
+      border-top: 1px solid #d4c9b0;
+      font-family: Arial, sans-serif; flex-shrink: 0;
+    }
     footer a { color: #5a7a5a; }
 
     @media (max-width: 640px) {
       .layout { flex-direction: column; }
-      #sidebar { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid #d4c9b0; }
+      #sidebar { width: 100%; height: 260px; border-right: none; border-bottom: 1px solid #d4c9b0; }
     }
   </style>
 </head>
@@ -213,265 +345,559 @@
 
 <div class="layout">
   <div id="sidebar">
+
+    <!-- ── Add Site button ── -->
+    <button class="add-site-btn" id="toggleAddSite">
+      <span class="icon">★</span>
+      Add a historic site
+    </button>
+
+    <!-- ── Add Site form panel ── -->
+    <div class="add-site-panel" id="addSitePanel">
+
+      <div class="form-group">
+        <label>Site name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Warrington Town Hall" />
+      </div>
+
+      <div class="form-group">
+        <label>Era / date</label>
+        <input type="text" id="f-era" placeholder="e.g. 1750, Medieval, Victorian" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="f-category">
+            <option>Civic</option>
+            <option>Religious</option>
+            <option>Industrial</option>
+            <option>Manor</option>
+            <option>Country House</option>
+            <option>Village Heritage</option>
+            <option>Historic Inn</option>
+            <option>Education</option>
+            <option>Prehistoric</option>
+            <option value="__custom__">Other…</option>
+          </select>
+          <input type="text" id="f-category-custom" placeholder="Custom category" style="display:none;margin-top:4px;" />
+        </div>
+        <div class="form-group">
+          <label>Listed grade</label>
+          <select id="f-grade">
+            <option value="other" selected>Notable / unlisted</option>
+            <option value="II">Grade II</option>
+            <option value="II*">Grade II*</option>
+            <option value="I">Grade I</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea id="f-desc" placeholder="Brief history and significance of the site…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Photo URL</label>
+        <input type="url" id="f-photo" placeholder="https://upload.wikimedia.org/…" />
+        <p class="form-hint">Paste a public image URL (e.g. from Wikimedia Commons or Imgur)</p>
+      </div>
+
+      <div class="form-group">
+        <label>Link to historic information</label>
+        <input type="url" id="f-link-url" placeholder="https://historicengland.org.uk/…" />
+        <input type="text" id="f-link-label" placeholder="Link label, e.g. Historic England listing" style="margin-top:4px;" />
+      </div>
+
+      <div class="form-group">
+        <label>Map location *</label>
+        <div class="form-row">
+          <input type="number" id="f-lat" placeholder="Latitude" step="any" />
+          <input type="number" id="f-lng" placeholder="Longitude" step="any" />
+        </div>
+        <button class="pick-map-btn" id="pickMapBtn">📍 Click on map to set location</button>
+        <div class="pick-hint" id="pickHint">Now click anywhere on the map to drop a pin. The coordinates will fill in automatically.</div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-submit" id="submitSiteBtn">Add to map</button>
+        <button class="btn-cancel" id="cancelAddSite">Cancel</button>
+      </div>
+      <div class="form-error" id="formError"></div>
+
+    </div>
+    <!-- /form panel -->
+
+    <!-- ── Filter bar ── -->
     <div class="filter-bar">
       <label>Filter by category</label>
       <div class="filter-buttons" id="filterButtons"></div>
     </div>
-    <div class="sidebar-header">Sites — click to locate on map</div>
+
+    <div class="sidebar-header" id="siteCount">Sites — click to locate on map</div>
     <div id="siteList"></div>
-  </div>
+
+  </div><!-- /sidebar -->
+
   <div id="map"></div>
 </div>
 
 <footer>
   Map tiles © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &nbsp;|&nbsp;
-  Heritage data: <a href="https://historicengland.org.uk" target="_blank">Historic England</a> &amp; <a href="https://www.warrington.gov.uk/our-heritage" target="_blank">Warrington Borough Council</a>
+  Heritage data: <a href="https://historicengland.org.uk" target="_blank">Historic England</a> &amp;
+  <a href="https://www.warrington.gov.uk/our-heritage" target="_blank">Warrington Borough Council</a>
 </footer>
 
 <script>
-  const sites = [
-    {
-      name: "Warrington Town Hall (Bank Hall)",
-      lat: 53.3901,
-      lng: -2.5877,
-      era: "c. 1750",
-      category: "Civic",
-      grade: "I",
-      description: "Originally built as 'Bank Hall' for Thomas Parr, designed by James Gibbs. Became Warrington Town Hall in 1872. The Grade I listed building sits behind the famous restored Golden Gates."
-    },
-    {
-      name: "The Golden Gates",
-      lat: 53.3899,
-      lng: -2.5874,
-      era: "pre-1895",
-      category: "Civic",
-      grade: "II",
-      description: "Magnificent ornate iron gates fronting the Town Hall, recently restored. A beloved landmark of Warrington and part of the Town Hall Conservation Area."
-    },
-    {
-      name: "Sankey Viaduct",
-      lat: 53.4475,
-      lng: -2.6508,
-      era: "1830",
-      category: "Industrial",
-      grade: "II*",
-      description: "Built by George Stephenson, this is the world's earliest surviving major railway viaduct, constructed for the Liverpool and Manchester Railway. A landmark of industrial heritage."
-    },
-    {
-      name: "St Elphin's Church",
-      lat: 53.3908,
-      lng: -2.5802,
-      era: "Medieval (rebuilt 1859)",
-      category: "Religious",
-      grade: "I",
-      description: "One of the oldest churches in Warrington, dedicated to St Elphin, a 7th-century bishop. The current structure was largely rebuilt in the Victorian era but retains its medieval steeple."
-    },
-    {
-      name: "Lymm Cross",
-      lat: 53.3749,
-      lng: -2.4757,
-      era: "17th century",
-      category: "Village Heritage",
-      grade: "I",
-      description: "A Grade I listed 17th-century sandstone cross that forms the focal point of Lymm village, which itself appeared in the Domesday Book. Surrounded by historic village buildings."
-    },
-    {
-      name: "Walton Hall",
-      lat: 53.3623,
-      lng: -2.5456,
-      era: "19th century",
-      category: "Country House",
-      grade: "II",
-      description: "A Victorian country house set within Walton Gardens. Now used as a heritage centre and events venue, the hall and its grounds are a popular destination in south Warrington."
-    },
-    {
-      name: "Warrington Museum & Library",
-      lat: 53.3897,
-      lng: -2.5969,
-      era: "1857",
-      category: "Civic",
-      grade: "II",
-      description: "Home to one of the oldest public libraries in England. The museum holds important local history collections and natural history specimens. The library movement in Warrington was pioneering in the UK."
-    },
-    {
-      name: "The Barley Mow",
-      lat: 53.3893,
-      lng: -2.5955,
-      era: "1561",
-      category: "Historic Inn",
-      grade: "other",
-      description: "The oldest building in Warrington town centre, dating to 1561. This timber-framed building in Golden Square has survived centuries of change around it and remains a remarkable example of Tudor architecture."
-    },
-    {
-      name: "Bewsey Old Hall",
-      lat: 53.3992,
-      lng: -2.6298,
-      era: "Medieval",
-      category: "Manor",
-      grade: "II*",
-      description: "The remains of a moated medieval manor house, home to the Boteler family for centuries. The surviving gatehouse and moat are remnants of a once-grand fortified hall, visible within a nature park."
-    },
-    {
-      name: "Warrington Academy (site)",
-      lat: 53.3903,
-      lng: -2.5930,
-      era: "1757",
-      category: "Education",
-      grade: "other",
-      description: "The Warrington Academy, founded in 1757, was one of England's leading Dissenting academies. It attracted notable thinkers including Joseph Priestley. The site marks a key chapter in Enlightenment-era education."
-    },
-    {
-      name: "St Mary's Church, Lymm",
-      lat: 53.3763,
-      lng: -2.4740,
-      era: "12th century",
-      category: "Religious",
-      grade: "II*",
-      description: "A parish church with origins in the 12th century, featuring Norman and medieval architectural elements. The church overlooks the village dam and is central to Lymm's historic character."
-    },
-    {
-      name: "Risley Moss (Prehistoric landscape)",
-      lat: 53.4285,
-      lng: -2.5640,
-      era: "Prehistoric",
-      category: "Prehistoric",
-      grade: "other",
-      description: "An ancient raised bog with evidence of prehistoric human activity. Risley Moss is a Site of Special Scientific Interest and holds archaeological significance as a preserved wetland landscape."
-    }
-  ];
-
-  const categories = [...new Set(sites.map(s => s.category))];
-  const gradeLabels = { "I": "Grade I", "II*": "Grade II*", "II": "Grade II", "other": "Notable" };
-  const gradeClass  = { "I": "badge-I", "II*": "badge-II-star", "II": "badge-II", "other": "badge-other" };
-
-  // Map colours per category
-  const catColour = {
-    "Civic":          "#2c6e8a",
-    "Industrial":     "#7a4a1a",
-    "Religious":      "#6a2a6a",
-    "Village Heritage":"#2a6a3a",
-    "Country House":  "#4a5a2a",
-    "Historic Inn":   "#8a3a2a",
-    "Manor":          "#4a2a6a",
-    "Education":      "#2a4a6a",
-    "Prehistoric":    "#5a5a2a"
-  };
-
-  function markerColour(site) {
-    return catColour[site.category] || "#444";
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
+const builtinSites = [
+  {
+    name: "Warrington Town Hall (Bank Hall)",
+    lat: 53.3901, lng: -2.5877,
+    era: "c. 1750", category: "Civic", grade: "I",
+    description: "Originally built as 'Bank Hall' for Thomas Parr, designed by James Gibbs. Became Warrington Town Hall in 1872. The Grade I listed building sits behind the famous restored Golden Gates."
+  },
+  {
+    name: "The Golden Gates",
+    lat: 53.3899, lng: -2.5874,
+    era: "pre-1895", category: "Civic", grade: "II",
+    description: "Magnificent ornate iron gates fronting the Town Hall, recently restored. A beloved landmark of Warrington and part of the Town Hall Conservation Area."
+  },
+  {
+    name: "Sankey Viaduct",
+    lat: 53.4475, lng: -2.6508,
+    era: "1830", category: "Industrial", grade: "II*",
+    description: "Built by George Stephenson, this is the world's earliest surviving major railway viaduct, constructed for the Liverpool and Manchester Railway. A landmark of industrial heritage."
+  },
+  {
+    name: "St Elphin's Church",
+    lat: 53.3908, lng: -2.5802,
+    era: "Medieval (rebuilt 1859)", category: "Religious", grade: "I",
+    description: "One of the oldest churches in Warrington, dedicated to St Elphin, a 7th-century bishop. The current structure was largely rebuilt in the Victorian era but retains its medieval steeple."
+  },
+  {
+    name: "Lymm Cross",
+    lat: 53.3749, lng: -2.4757,
+    era: "17th century", category: "Village Heritage", grade: "I",
+    description: "A Grade I listed 17th-century sandstone cross that forms the focal point of Lymm village, which itself appeared in the Domesday Book. Surrounded by historic village buildings."
+  },
+  {
+    name: "Walton Hall",
+    lat: 53.3623, lng: -2.5456,
+    era: "19th century", category: "Country House", grade: "II",
+    description: "A Victorian country house set within Walton Gardens. Now used as a heritage centre and events venue, the hall and its grounds are a popular destination in south Warrington."
+  },
+  {
+    name: "Warrington Museum & Library",
+    lat: 53.3897, lng: -2.5969,
+    era: "1857", category: "Civic", grade: "II",
+    description: "Home to one of the oldest public libraries in England. The museum holds important local history collections. The library movement in Warrington was pioneering in the UK."
+  },
+  {
+    name: "The Barley Mow",
+    lat: 53.3893, lng: -2.5955,
+    era: "1561", category: "Historic Inn", grade: "other",
+    description: "The oldest building in Warrington town centre, dating to 1561. This timber-framed building in Golden Square has survived centuries of change and is a remarkable example of Tudor architecture."
+  },
+  {
+    name: "Bewsey Old Hall",
+    lat: 53.3992, lng: -2.6298,
+    era: "Medieval", category: "Manor", grade: "II*",
+    description: "The remains of a moated medieval manor house, home to the Boteler family for centuries. The surviving gatehouse and moat are remnants of a once-grand fortified hall, visible within a nature park."
+  },
+  {
+    name: "Warrington Academy (site)",
+    lat: 53.3903, lng: -2.5930,
+    era: "1757", category: "Education", grade: "other",
+    description: "The Warrington Academy, founded in 1757, was one of England's leading Dissenting academies. It attracted notable thinkers including Joseph Priestley. A key chapter in Enlightenment-era education."
+  },
+  {
+    name: "St Mary's Church, Lymm",
+    lat: 53.3763, lng: -2.4740,
+    era: "12th century", category: "Religious", grade: "II*",
+    description: "A parish church with origins in the 12th century, featuring Norman and medieval architectural elements. The church overlooks the village dam and is central to Lymm's historic character."
+  },
+  {
+    name: "Risley Moss (Prehistoric landscape)",
+    lat: 53.4285, lng: -2.5640,
+    era: "Prehistoric", category: "Prehistoric", grade: "other",
+    description: "An ancient raised bog with evidence of prehistoric human activity. Risley Moss is a Site of Special Scientific Interest and holds archaeological significance as a preserved wetland landscape."
   }
+];
 
-  function makeIcon(colour) {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
-      <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z"
-            fill="${colour}" stroke="#fff" stroke-width="1.5"/>
-      <circle cx="12" cy="12" r="5" fill="#fff" fill-opacity="0.85"/>
-    </svg>`;
-    return L.divIcon({
-      html: svg,
-      className: "",
-      iconSize: [24, 36],
-      iconAnchor: [12, 36],
-      popupAnchor: [0, -34]
-    });
+/* ─────────────────────────────────────────────
+   CONSTANTS & HELPERS
+───────────────────────────────────────────── */
+const gradeLabels = { "I": "Grade I", "II*": "Grade II*", "II": "Grade II", "other": "Notable" };
+const gradeClass  = { "I": "badge-I", "II*": "badge-II-star", "II": "badge-II", "other": "badge-other" };
+
+const catColour = {
+  "Civic":           "#2c6e8a",
+  "Industrial":      "#7a4a1a",
+  "Religious":       "#6a2a6a",
+  "Village Heritage":"#2a6a3a",
+  "Country House":   "#4a5a2a",
+  "Historic Inn":    "#8a3a2a",
+  "Manor":           "#4a2a6a",
+  "Education":       "#2a4a6a",
+  "Prehistoric":     "#5a5a2a"
+};
+
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function markerColour(site) {
+  if (site.isUser) return '#b8860b';
+  return catColour[site.category] || '#555';
+}
+
+function makeIcon(site) {
+  const colour = markerColour(site);
+  const inner = site.isUser
+    ? `<text x="12" y="17" text-anchor="middle" font-size="11" fill="#fff" font-family="Arial" font-weight="bold">★</text>`
+    : `<circle cx="12" cy="12" r="5" fill="#fff" fill-opacity="0.85"/>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
+    <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z"
+          fill="${colour}" stroke="#fff" stroke-width="1.5"/>
+    ${inner}
+  </svg>`;
+  return L.divIcon({ html: svg, className: '', iconSize: [24,36], iconAnchor: [12,36], popupAnchor: [0,-34] });
+}
+
+function buildPopupHTML(site) {
+  let h = '';
+  if (site.photo) {
+    h += `<img class="popup-img" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
   }
-
-  // Init map
-  const map = L.map("map").setView([53.3950, -2.5700], 12);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  // State
-  let activeFilters = new Set(categories);
-  let activeCard = null;
-  const markers = [];
-
-  // Build markers
-  sites.forEach((site, i) => {
-    const marker = L.marker([site.lat, site.lng], { icon: makeIcon(markerColour(site)) });
-
-    const popup = `
-      <div class="popup-title">${site.name}</div>
-      <div class="popup-era">${site.era}</div>
-      <div class="popup-desc">${site.description}</div>
-      <div class="popup-badge">
-        <span class="badge ${gradeClass[site.grade]}">${gradeLabels[site.grade]}</span>
-      </div>`;
-
-    marker.bindPopup(popup, { maxWidth: 260 });
-    marker.addTo(map);
-    markers.push({ site, marker });
-  });
-
-  // Sidebar cards
-  const siteList = document.getElementById("siteList");
-
-  function buildCards() {
-    siteList.innerHTML = "";
-    const visible = sites.filter(s => activeFilters.has(s.category));
-    if (visible.length === 0) {
-      siteList.innerHTML = `<p style="padding:16px;font-size:0.8rem;color:#8a7a60;font-family:Arial,sans-serif;">No sites match current filters.</p>`;
-      return;
-    }
-    visible.forEach((site, idx) => {
-      const card = document.createElement("div");
-      card.className = "site-card";
-      card.dataset.idx = idx;
-      card.innerHTML = `
-        <h3>${site.name}</h3>
-        <div class="era">${site.era} &middot; ${site.category}</div>
-        <p>${site.description.slice(0, 100)}…</p>
-        <span class="badge ${gradeClass[site.grade]}">${gradeLabels[site.grade]}</span>`;
-
-      card.addEventListener("click", () => {
-        document.querySelectorAll(".site-card").forEach(c => c.classList.remove("active"));
-        card.classList.add("active");
-        const entry = markers.find(m => m.site === site);
-        if (entry) {
-          map.setView([site.lat, site.lng], 15, { animate: true });
-          entry.marker.openPopup();
-        }
-      });
-
-      siteList.appendChild(card);
-    });
+  h += `<div class="popup-title">${esc(site.name)}</div>`;
+  h += `<div class="popup-era">${esc(site.era || '')}${site.era && site.category ? ' · ' : ''}${esc(site.category)}</div>`;
+  h += `<div class="popup-desc">${esc(site.description)}</div>`;
+  h += `<div class="popup-badge">`;
+  h += `<span class="badge ${gradeClass[site.grade] || 'badge-other'}">${gradeLabels[site.grade] || 'Notable'}</span>`;
+  if (site.isUser) h += ` <span class="badge badge-user">★ Added by you</span>`;
+  h += `</div>`;
+  if (site.linkUrl) {
+    h += `<a class="popup-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel || 'More information →')}</a>`;
   }
+  return h;
+}
 
-  // Update marker visibility
-  function updateMarkers() {
-    markers.forEach(({ site, marker }) => {
-      if (activeFilters.has(site.category)) {
-        marker.addTo(map);
-      } else {
-        map.removeLayer(marker);
-      }
-    });
-  }
+/* ─────────────────────────────────────────────
+   USER SITES — localStorage persistence
+───────────────────────────────────────────── */
+const STORAGE_KEY = 'warrington-user-sites-v1';
 
-  // Filter buttons
-  const filterContainer = document.getElementById("filterButtons");
-  categories.forEach(cat => {
-    const btn = document.createElement("button");
-    btn.className = "filter-btn on";
+function loadUserSites() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveUserSites(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+let userSites = loadUserSites().map(s => ({ ...s, isUser: true }));
+
+function allSites() { return [...builtinSites, ...userSites]; }
+
+/* ─────────────────────────────────────────────
+   MAP SETUP
+───────────────────────────────────────────── */
+const map = L.map('map').setView([53.3950, -2.5700], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+/* ─────────────────────────────────────────────
+   MARKERS
+───────────────────────────────────────────── */
+let markers = []; // { site, marker }
+let activeFilters = new Set();
+
+function addSiteMarker(site) {
+  const marker = L.marker([site.lat, site.lng], { icon: makeIcon(site) });
+  marker.bindPopup(buildPopupHTML(site), { maxWidth: 270 });
+  if (activeFilters.has(site.category)) marker.addTo(map);
+  markers.push({ site, marker });
+  return marker;
+}
+
+function initMarkers() {
+  markers.forEach(({ marker }) => map.removeLayer(marker));
+  markers = [];
+  allSites().forEach(s => addSiteMarker(s));
+}
+
+/* ─────────────────────────────────────────────
+   FILTER BUTTONS
+───────────────────────────────────────────── */
+const filterContainer = document.getElementById('filterButtons');
+
+function buildFilterButtons() {
+  const cats = [...new Set(allSites().map(s => s.category))];
+  // Preserve existing active state
+  const prev = new Set(activeFilters);
+  // Any new category is active by default
+  cats.forEach(c => { if (!prev.has(c)) activeFilters.add(c); });
+  // Remove gone categories
+  [...activeFilters].forEach(c => { if (!cats.includes(c)) activeFilters.delete(c); });
+
+  filterContainer.innerHTML = '';
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (activeFilters.has(cat) ? ' on' : '');
     btn.textContent = cat;
-    btn.addEventListener("click", () => {
-      if (activeFilters.has(cat)) {
-        activeFilters.delete(cat);
-        btn.classList.remove("on");
-      } else {
-        activeFilters.add(cat);
-        btn.classList.add("on");
-      }
-      updateMarkers();
+    btn.addEventListener('click', () => {
+      if (activeFilters.has(cat)) { activeFilters.delete(cat); btn.classList.remove('on'); }
+      else { activeFilters.add(cat); btn.classList.add('on'); }
+      updateMarkerVisibility();
       buildCards();
     });
     filterContainer.appendChild(btn);
   });
+}
 
+function updateMarkerVisibility() {
+  markers.forEach(({ site, marker }) => {
+    if (activeFilters.has(site.category)) marker.addTo(map);
+    else map.removeLayer(marker);
+  });
+}
+
+/* ─────────────────────────────────────────────
+   SIDEBAR CARDS
+───────────────────────────────────────────── */
+const siteList    = document.getElementById('siteList');
+const siteCount   = document.getElementById('siteCount');
+
+function buildCards() {
+  siteList.innerHTML = '';
+  const visible = allSites().filter(s => activeFilters.has(s.category));
+  siteCount.textContent = `${visible.length} site${visible.length === 1 ? '' : 's'} — click to locate on map`;
+
+  if (visible.length === 0) {
+    siteList.innerHTML = '<p style="padding:16px;font-size:0.8rem;color:#8a7a60;font-family:Arial,sans-serif;">No sites match current filters.</p>';
+    return;
+  }
+
+  visible.forEach(site => {
+    const card = document.createElement('div');
+    card.className = 'site-card' + (site.isUser ? ' user-added' : '');
+
+    let html = '';
+    if (site.photo) html += `<img class="thumb" src="${esc(site.photo)}" alt="" onerror="this.style.display='none'" />`;
+
+    html += `<div class="card-top">
+      <h3>${esc(site.name)}</h3>
+      ${site.isUser ? `<button class="delete-btn" title="Remove this site" data-id="${esc(site.id)}">✕</button>` : ''}
+    </div>`;
+    html += `<div class="era">${esc(site.era || '')}${site.era && site.category ? ' · ' : ''}${esc(site.category)}</div>`;
+    html += `<p>${esc(site.description).slice(0, 110)}${site.description.length > 110 ? '…' : ''}</p>`;
+    html += `<span class="badge ${gradeClass[site.grade] || 'badge-other'}">${gradeLabels[site.grade] || 'Notable'}</span>`;
+    if (site.isUser) html += ` <span class="badge badge-user">★ Added</span>`;
+    if (site.linkUrl) {
+      html += `<div class="card-links"><a class="card-link" href="${esc(site.linkUrl)}" target="_blank" rel="noopener">${esc(site.linkLabel || 'More information →')}</a></div>`;
+    }
+
+    card.innerHTML = html;
+
+    // Click to fly to
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-btn') || e.target.classList.contains('card-link')) return;
+      document.querySelectorAll('.site-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const entry = markers.find(m => m.site === site);
+      if (entry) {
+        map.setView([site.lat, site.lng], 16, { animate: true });
+        entry.marker.openPopup();
+      }
+    });
+
+    // Delete button
+    const delBtn = card.querySelector('.delete-btn');
+    if (delBtn) {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!confirm(`Remove "${site.name}" from the map?`)) return;
+        userSites = userSites.filter(s => s.id !== site.id);
+        saveUserSites(userSites.map(({ isUser, ...rest }) => rest));
+        const entry = markers.find(m => m.site === site);
+        if (entry) { map.removeLayer(entry.marker); markers = markers.filter(m => m.site !== site); }
+        buildFilterButtons();
+        buildCards();
+      });
+    }
+
+    siteList.appendChild(card);
+  });
+}
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+// Seed active filters with all builtin categories first
+builtinSites.forEach(s => activeFilters.add(s.category));
+userSites.forEach(s => activeFilters.add(s.category));
+
+initMarkers();
+buildFilterButtons();
+buildCards();
+
+/* ─────────────────────────────────────────────
+   ADD SITE FORM
+───────────────────────────────────────────── */
+const toggleBtn     = document.getElementById('toggleAddSite');
+const panel         = document.getElementById('addSitePanel');
+const cancelBtn     = document.getElementById('cancelAddSite');
+const submitBtn     = document.getElementById('submitSiteBtn');
+const formError     = document.getElementById('formError');
+const pickMapBtn    = document.getElementById('pickMapBtn');
+const pickHint      = document.getElementById('pickHint');
+const catSelect     = document.getElementById('f-category');
+const catCustom     = document.getElementById('f-category-custom');
+
+let pickingMode = false;
+let tempPickMarker = null;
+
+function openPanel() {
+  panel.classList.add('open');
+  toggleBtn.querySelector('span').textContent = '✕';
+  toggleBtn.style.background = '#524232';
+}
+function closePanel() {
+  panel.classList.remove('open');
+  toggleBtn.querySelector('span').textContent = '★';
+  toggleBtn.style.background = '';
+  exitPickMode();
+  formError.style.display = 'none';
+}
+function resetForm() {
+  ['f-name','f-era','f-desc','f-photo','f-link-url','f-link-label','f-lat','f-lng'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  catSelect.value = 'Civic';
+  catCustom.style.display = 'none';
+  catCustom.value = '';
+  document.getElementById('f-grade').value = 'other';
+  formError.style.display = 'none';
+  if (tempPickMarker) { map.removeLayer(tempPickMarker); tempPickMarker = null; }
+}
+
+toggleBtn.addEventListener('click', () => {
+  if (panel.classList.contains('open')) { closePanel(); resetForm(); }
+  else openPanel();
+});
+cancelBtn.addEventListener('click', () => { closePanel(); resetForm(); });
+
+// Show/hide custom category input
+catSelect.addEventListener('change', () => {
+  catCustom.style.display = catSelect.value === '__custom__' ? 'block' : 'none';
+});
+
+// Pick mode
+function enterPickMode() {
+  pickingMode = true;
+  pickMapBtn.textContent = '✕ Cancel picking';
+  pickMapBtn.classList.add('picking');
+  pickHint.style.display = 'block';
+  document.querySelector('.leaflet-container').classList.add('map-picking');
+}
+function exitPickMode() {
+  pickingMode = false;
+  pickMapBtn.textContent = '📍 Click on map to set location';
+  pickMapBtn.classList.remove('picking');
+  pickHint.style.display = 'none';
+  document.querySelector('.leaflet-container').classList.remove('map-picking');
+}
+
+pickMapBtn.addEventListener('click', () => {
+  if (pickingMode) exitPickMode();
+  else {
+    openPanel();
+    enterPickMode();
+    // Scroll map into view hint
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+});
+
+map.on('click', (e) => {
+  if (!pickingMode) return;
+  const { lat, lng } = e.latlng;
+  document.getElementById('f-lat').value = lat.toFixed(6);
+  document.getElementById('f-lng').value = lng.toFixed(6);
+  if (tempPickMarker) map.removeLayer(tempPickMarker);
+  tempPickMarker = L.circleMarker([lat, lng], {
+    radius: 8, color: '#b8860b', fillColor: '#b8860b', fillOpacity: 0.6, weight: 2
+  }).addTo(map);
+  exitPickMode();
+});
+
+// Form submit
+submitBtn.addEventListener('click', () => {
+  const name  = document.getElementById('f-name').value.trim();
+  const desc  = document.getElementById('f-desc').value.trim();
+  const latV  = parseFloat(document.getElementById('f-lat').value);
+  const lngV  = parseFloat(document.getElementById('f-lng').value);
+
+  if (!name) { showError('Please enter a site name.'); return; }
+  if (!desc) { showError('Please enter a description.'); return; }
+  if (isNaN(latV) || isNaN(lngV)) { showError('Please set a map location — use the "Click on map" button or enter coordinates manually.'); return; }
+  if (latV < 53.2 || latV > 53.6 || lngV < -2.9 || lngV > -2.2) {
+    if (!confirm('These coordinates look outside the Warrington area. Add anyway?')) return;
+  }
+
+  const cat = catSelect.value === '__custom__'
+    ? (catCustom.value.trim() || 'Other')
+    : catSelect.value;
+
+  const newSite = {
+    id:        Date.now().toString(),
+    isUser:    true,
+    name,
+    era:       document.getElementById('f-era').value.trim(),
+    category:  cat,
+    grade:     document.getElementById('f-grade').value,
+    description: desc,
+    photo:     document.getElementById('f-photo').value.trim(),
+    linkUrl:   document.getElementById('f-link-url').value.trim(),
+    linkLabel: document.getElementById('f-link-label').value.trim(),
+    lat:       latV,
+    lng:       lngV
+  };
+
+  userSites.push(newSite);
+  saveUserSites(userSites.map(({ isUser, ...rest }) => rest));
+
+  activeFilters.add(cat);
+  addSiteMarker(newSite);
+  buildFilterButtons();
   buildCards();
+
+  if (tempPickMarker) { map.removeLayer(tempPickMarker); tempPickMarker = null; }
+  map.setView([latV, lngV], 15, { animate: true });
+  const entry = markers.find(m => m.site === newSite);
+  if (entry) entry.marker.openPopup();
+
+  closePanel();
+  resetForm();
+
+  // Scroll new card into view
+  setTimeout(() => {
+    const cards = siteList.querySelectorAll('.site-card.user-added');
+    if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 400);
+});
+
+function showError(msg) {
+  formError.textContent = msg;
+  formError.style.display = 'block';
+}
 </script>
 </body>
 </html>
