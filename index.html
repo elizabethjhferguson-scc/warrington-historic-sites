@@ -24,12 +24,12 @@ header span{font-size:.78rem;opacity:.55;font-style:italic;}
 #sidebar{width:310px;flex-shrink:0;background:#faf7f2;border-right:1px solid #d4c9b0;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:0;}
 
 /* ── TABS ── */
-.tab-bar{display:flex;flex-wrap:wrap;flex-shrink:0;border-bottom:2px solid #d4c9b0;background:#f0ebe0;}
-.tab-btn{flex:1 1 auto;padding:8px 2px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.7rem;color:#7a6a50;letter-spacing:.01em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;}
+.tab-bar{display:flex;flex-shrink:0;border-bottom:2px solid #d4c9b0;background:#f0ebe0;}
+.tab-btn{flex:1;padding:8px 2px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.63rem;color:#7a6a50;letter-spacing:.01em;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tab-btn:hover{color:#2c2416;background:#e8e0d0;}
 .tab-btn.active{color:#2c2416;border-bottom-color:#2c2416;font-weight:bold;}
-/* War tab: full-width row beneath other tabs */
-#tab-war-btn{flex-basis:100%;border-top:1px solid #d4c9b0;padding:7px 8px;text-align:left;font-size:.7rem;letter-spacing:.02em;color:#8a6a20;}
+#tab-war-btn{color:#8a6a20;background:#f5efe0;border-left:1px solid #d4c9b0;}
+#tab-war-btn.active{color:#3a2000;border-bottom-color:#8a6a20;background:#ede5d0;}
 .tab-content{display:flex;flex-direction:column;flex:1;overflow-y:auto;min-height:0;}
 .tab-content.hidden{display:none!important;}
 
@@ -302,7 +302,7 @@ footer a{color:#5a7a5a;}
     <button class="tab-btn active" id="tab-sites-btn">🗺 Sites</button>
     <button class="tab-btn" id="tab-walks-btn">👣 Walks</button>
     <button class="tab-btn" id="tab-stories-btn">📖 Stories</button>
-    <button class="tab-btn" id="tab-war-btn" style="color:#8a6a20;">⚔️ War</button>
+    <button class="tab-btn" id="tab-war-btn">✈️ War</button>
   </div>
 
   <!-- ══ SITES TAB ══ -->
@@ -853,15 +853,24 @@ function populateAreaDropdowns(){
 let activeTab='sites';
 function switchTab(tab){
   activeTab=tab;
-  ['sites','walks','stories','war'].forEach(t=>{
-    const el=document.getElementById('tab-'+t);
-    const btn=document.getElementById('tab-'+t+'-btn');
-    if(el){
-      const show=(t===tab);
-      el.style.display=show?'flex':'none';
-      // also sync the class so !important CSS and inline style agree
-      el.classList.toggle('hidden',!show);
+  // Force hide every tab panel, then show the chosen one
+  const panels={sites:'tab-sites',walks:'tab-walks',stories:'tab-stories',war:'tab-war'};
+  Object.entries(panels).forEach(([t,id])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(t===tab){
+      el.removeAttribute('style');       // clear any inline display
+      el.style.display='flex';
+      el.style.flexDirection='column';
+      el.style.flex='1';
+      el.style.overflowY='auto';
+      el.style.minHeight='0';
+      el.classList.remove('hidden');
+    } else {
+      el.style.cssText='display:none!important';
+      el.classList.add('hidden');
     }
+    const btn=document.getElementById('tab-'+t+'-btn');
     if(btn) btn.classList.toggle('active',t===tab);
   });
   if(tab!=='sites')closeDetail();
@@ -1644,6 +1653,22 @@ document.getElementById('submitHonourBtn').onclick=()=>{
 /* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
+// Initialise tab visibility explicitly at startup
+(function initTabs(){
+  const show='tab-sites';
+  ['tab-sites','tab-walks','tab-stories','tab-war'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(id===show){
+      el.style.display='flex';el.style.flexDirection='column';
+      el.style.flex='1';el.style.overflowY='auto';el.style.minHeight='0';
+      el.classList.remove('hidden');
+    } else {
+      el.style.cssText='display:none!important';
+      el.classList.add('hidden');
+    }
+  });
+})();
 // Safety: ensure map starts with no war filter and war markers cleared
 document.getElementById('map').className='';
 populateAreaDropdowns();
