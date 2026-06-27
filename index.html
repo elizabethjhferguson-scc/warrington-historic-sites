@@ -25,7 +25,7 @@ header span{font-size:.78rem;opacity:.55;font-style:italic;}
 
 /* ── TABS ── */
 .tab-bar{display:flex;flex-shrink:0;border-bottom:2px solid #d4c9b0;background:#f0ebe0;}
-.tab-btn{flex:1;padding:9px 4px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.75rem;color:#7a6a50;letter-spacing:.02em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.tab-btn{flex:1;padding:9px 2px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.68rem;color:#7a6a50;letter-spacing:.01em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;}
 .tab-btn:hover{color:#2c2416;background:#e8e0d0;}
 .tab-btn.active{color:#2c2416;border-bottom-color:#2c2416;font-weight:bold;}
 .tab-content{display:flex;flex-direction:column;flex:1;overflow-y:auto;}
@@ -212,6 +212,58 @@ header span{font-size:.78rem;opacity:.55;font-style:italic;}
 .popup-btn{padding:3px 9px;font-size:.69rem;font-family:Arial,sans-serif;border:1px solid #b0a080;border-radius:3px;cursor:pointer;background:#f5f0e8;color:#4a3a28;}
 .popup-btn:hover{background:#e0d8c8;}
 
+/* ── WAR SECTION ── */
+.war-hero{background:linear-gradient(150deg,#1a1a2e,#3a2a0a);color:#f5d090;padding:16px 14px 12px;text-align:center;flex-shrink:0;position:relative;}
+.war-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");pointer-events:none;}
+.war-hero h2{font-size:1rem;letter-spacing:.08em;margin-bottom:2px;position:relative;}
+.war-hero p{font-size:.7rem;opacity:.7;font-style:italic;font-family:Arial,sans-serif;position:relative;}
+.war-sub-nav{display:flex;flex-shrink:0;border-bottom:2px solid #3a3020;background:#2a2010;}
+.war-sub-btn{flex:1;padding:9px 4px;background:none;border:none;cursor:pointer;font-family:Georgia,serif;font-size:.68rem;color:#b0a070;letter-spacing:.02em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;line-height:1.2;}
+.war-sub-btn:hover{color:#f5d090;background:#3a3020;}
+.war-sub-btn.active{color:#f5d090;border-bottom-color:#f5d090;font-weight:bold;}
+.war-period{display:none;flex-direction:column;flex:1;overflow-y:auto;}
+.war-period.active{display:flex;}
+.war-info-box{padding:13px 14px;background:#f5efe0;border-bottom:1px solid #d4c9b0;}
+.war-info-box h3{font-size:.88rem;margin-bottom:6px;color:#2c1a08;}
+.war-info-box p{font-size:.76rem;font-family:Arial,sans-serif;line-height:1.5;color:#3c2a18;margin-bottom:7px;}
+.war-info-box a{color:#2a5a8a;font-size:.74rem;font-family:Arial,sans-serif;}
+.war-sites-list{padding:8px 14px;background:#f0ebe0;border-bottom:1px solid #d4c9b0;flex-shrink:0;}
+.war-sites-list h4{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:#7a6040;margin-bottom:5px;}
+.war-site-pill{display:inline-block;padding:3px 10px;margin:2px 3px 2px 0;border-radius:12px;font-size:.69rem;font-family:Arial,sans-serif;cursor:pointer;border:1px solid #c0a060;background:#faf0d8;color:#4a3010;transition:all .15s;}
+.war-site-pill:hover{background:#2c2416;color:#f5d090;border-color:#2c2416;}
+.war-site-pill.ww1{border-color:#6a8040;background:#e8f0d8;color:#2a3a10;}
+.war-site-pill.ww2{border-color:#6a4040;background:#f0e0d8;color:#3a1a10;}
+.war-site-pill.heroes{border-color:#4060a0;background:#d8e0f0;color:#102040;}
+.war-map-note{margin:10px 14px;padding:8px 10px;background:#2a2010;color:#f5d090;border-radius:4px;font-size:.72rem;font-family:Arial,sans-serif;line-height:1.4;}
+.war-map-note strong{display:block;margin-bottom:3px;}
+/* Memories */
+.add-btn-war{background:#1a1a2e;}.add-btn-war:hover{background:#2a2a3e;}.add-btn-war .icon{background:#8a7a50;}
+.memory-card{padding:11px 14px;border-bottom:1px solid #e8e0d0;border-left:3px solid #8a7a50;}
+.memory-card:hover{background:#f0ebe0;}
+.memory-name{font-size:.85rem;font-weight:bold;color:#2c1a08;}
+.memory-meta{font-size:.7rem;color:#8a6a40;font-family:Arial,sans-serif;margin:2px 0 5px;}
+.memory-text{font-size:.76rem;font-family:Arial,sans-serif;line-height:1.45;color:#3c2a18;}
+/* Honour Board */
+.honour-board-header{background:linear-gradient(135deg,#1a1a2e,#2a1a00);color:#f5d090;padding:14px 14px 10px;text-align:center;flex-shrink:0;}
+.honour-board-header h3{font-size:.95rem;letter-spacing:.08em;margin-bottom:2px;}
+.honour-board-header p{font-size:.7rem;opacity:.7;font-family:Arial,sans-serif;font-style:italic;}
+.honour-card{padding:13px 14px;border-bottom:1px solid #d8caa0;background:#fdf8ee;position:relative;}
+.honour-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--branch-col,#8a8a8a);}
+.honour-name{font-size:.95rem;font-weight:bold;color:#1a1000;letter-spacing:.02em;}
+.honour-rank{font-size:.74rem;color:#6a5020;font-family:Arial,sans-serif;margin:2px 0;}
+.honour-years{font-size:.7rem;color:#8a7040;font-family:Arial,sans-serif;margin-bottom:6px;}
+.honour-story{font-size:.77rem;font-family:Arial,sans-serif;line-height:1.48;color:#2a1a00;}
+.honour-photo{width:60px;height:60px;object-fit:cover;border-radius:3px;float:right;margin:0 0 6px 10px;border:2px solid #c8b080;}
+.honour-branch-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-family:Arial,sans-serif;font-weight:bold;margin-bottom:6px;color:#fff;}
+.branch-army{background:#4a6a2a;}.branch-raf{background:#2a4a8a;}.branch-navy{background:#0a2a5a;}.branch-merchant{background:#2a6a6a;}.branch-home{background:#5a2a6a;}.branch-civilian{background:#6a3a1a;}.branch-womens{background:#7a2a5a;}.branch-other{background:#5a5a5a;}
+.honour-submitter{font-size:.66rem;color:#9a8a60;font-family:Arial,sans-serif;margin-top:5px;font-style:italic;}
+.honour-expand{font-size:.69rem;color:#2a5a8a;font-family:Arial,sans-serif;cursor:pointer;text-decoration:underline;display:block;margin-top:3px;}
+/* Map war mode */
+#map.war-sepia{filter:sepia(.75) saturate(.5) brightness(.88) contrast(1.05);}
+#map.war-heroes{filter:none;}
+/* War marker */
+@keyframes warPulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
 /* ── PRINT ── */
 @media print{
   .no-print{display:none!important;}
@@ -248,6 +300,7 @@ footer a{color:#5a7a5a;}
     <button class="tab-btn active" id="tab-sites-btn">🗺 Sites</button>
     <button class="tab-btn" id="tab-walks-btn">👣 Walks</button>
     <button class="tab-btn" id="tab-stories-btn">📖 Stories</button>
+    <button class="tab-btn" id="tab-war-btn" style="color:#8a6a20;">⚔️ War</button>
   </div>
 
   <!-- ══ SITES TAB ══ -->
@@ -382,6 +435,136 @@ footer a{color:#5a7a5a;}
     </div>
     <div class="list-header" id="storyCount">Community stories</div>
     <div id="storyList"></div>
+  </div>
+
+  <!-- ══ WAR TAB ══ -->
+  <div class="tab-content hidden" id="tab-war">
+    <div class="war-hero">
+      <h2>⚔️ Warrington at War</h2>
+      <p>Honouring those who served, sacrificed &amp; survived</p>
+    </div>
+    <div class="war-sub-nav">
+      <button class="war-sub-btn active" data-war="ww1">🪖 WW1<br><span style="font-size:.6rem;opacity:.7;">1914–1918</span></button>
+      <button class="war-sub-btn" data-war="ww2">✈️ WW2<br><span style="font-size:.6rem;opacity:.7;">1939–1945</span></button>
+      <button class="war-sub-btn" data-war="heroes">🎖 Heroes<br><span style="font-size:.6rem;opacity:.7;">Live On</span></button>
+    </div>
+
+    <!-- WW1 -->
+    <div class="war-period active" id="war-ww1">
+      <div class="war-info-box">
+        <h3>Warrington 1914–1918</h3>
+        <p>Warrington made a profound contribution to the First World War. Its wire and wire-rope works — particularly Rylands Brothers — produced vast quantities of barbed wire that stretched across the Western Front. The town's chemical and rubber industries turned to munitions and equipment manufacture. Thousands of local men enlisted in the Warrington Pals battalion and other regiments, many never to return.</p>
+        <p>The Warrington Cenotaph in Palmyra Square records the sacrifice of over 1,400 men and women. Winwick Hospital served as a military auxiliary hospital. The town's railways became vital arteries for troops and supplies heading south to embarkation ports.</p>
+        <a href="https://www.warrington.gov.uk/our-heritage" target="_blank">Warrington Heritage →</a>
+      </div>
+      <div class="war-map-note"><strong>🗺 WW1 Map View</strong>The map is showing a historical view — sites are shown as they existed in the 1914–1918 era. Click a site to learn more.</div>
+      <div class="war-sites-list">
+        <h4>Key WW1 Sites — click to locate</h4>
+        <div id="ww1Pills"></div>
+      </div>
+      <button class="add-btn add-btn-war" id="toggleAddWw1Memory"><span class="icon">+</span> Add a WW1 memory</button>
+      <div class="form-panel" id="addWw1MemoryPanel">
+        <div class="form-group"><label>Person / place / story title *</label><input type="text" id="wm1-title" placeholder="e.g. My great-grandfather at the Somme"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Your name</label><input type="text" id="wm1-author" placeholder="Anonymous"/></div>
+          <div class="form-group"><label>Connection (e.g. grandson)</label><input type="text" id="wm1-connection" placeholder=""/></div>
+        </div>
+        <div class="form-group"><label>Your memory / story *</label><textarea id="wm1-text" placeholder="Share what you know…" style="min-height:80px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="wm1-photo" placeholder="https://…"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" id="submitWw1Btn">Share memory</button>
+          <button class="btn-cancel" id="cancelWw1Btn">Cancel</button>
+        </div>
+        <div class="form-error" id="ww1MemErr"></div>
+      </div>
+      <div class="list-header" id="ww1MemCount">WW1 community memories</div>
+      <div id="ww1MemList"></div>
+    </div>
+
+    <!-- WW2 -->
+    <div class="war-period" id="war-ww2">
+      <div class="war-info-box">
+        <h3>Warrington 1939–1945</h3>
+        <p>Warrington was at the heart of Britain's war effort. RAF Burtonwood became one of the largest US Air Force bases in Europe — some 18,000 American servicemen were stationed here, with the base overhauling and supplying aircraft across the theatre of war. It was a town-within-a-town and transformed local life.</p>
+        <p>The Risley Royal Ordnance Factory, built rapidly from 1939, employed tens of thousands — mostly women — producing shells, cartridges and explosives. Crosfields chemical works contributed to war production. Bank Quay railway station was a vital supply hub. Warrington suffered bombing raids, and its people endured rationing, evacuees, and the constant anxiety of war.</p>
+        <a href="https://www.rafburtonwood.com/" target="_blank">RAF Burtonwood Heritage Centre →</a>
+      </div>
+      <div class="war-map-note"><strong>🗺 WW2 Map View</strong>Map showing the Warrington of 1939–1945. The airfields, ordnance works and military installations that defined the town in wartime are marked.</div>
+      <div class="war-sites-list">
+        <h4>Key WW2 Sites — click to locate</h4>
+        <div id="ww2Pills"></div>
+      </div>
+      <button class="add-btn add-btn-war" id="toggleAddWw2Memory"><span class="icon">+</span> Add a WW2 memory</button>
+      <div class="form-panel" id="addWw2MemoryPanel">
+        <div class="form-group"><label>Person / place / story title *</label><input type="text" id="wm2-title" placeholder="e.g. Mum working at Risley Ordnance Factory"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Your name</label><input type="text" id="wm2-author" placeholder="Anonymous"/></div>
+          <div class="form-group"><label>Connection</label><input type="text" id="wm2-connection" placeholder="e.g. daughter"/></div>
+        </div>
+        <div class="form-group"><label>Your memory / story *</label><textarea id="wm2-text" placeholder="Share what you know…" style="min-height:80px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="wm2-photo" placeholder="https://…"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" id="submitWw2Btn">Share memory</button>
+          <button class="btn-cancel" id="cancelWw2Btn">Cancel</button>
+        </div>
+        <div class="form-error" id="ww2MemErr"></div>
+      </div>
+      <div class="list-header" id="ww2MemCount">WW2 community memories</div>
+      <div id="ww2MemList"></div>
+    </div>
+
+    <!-- HEROES -->
+    <div class="war-period" id="war-heroes">
+      <div class="war-info-box" style="background:#0e1828;color:#b8d0f0;border-color:#2a3a50;">
+        <h3 style="color:#f0d870;">🎖 Heroes Live On Through Us</h3>
+        <p style="color:#a0b8d0;">The map shows modern-day Warrington — highlighting war memorials, museums, preserved buildings and places where you can still feel the presence of those who served. Visit them, remember them, and add their stories to the Honour Board below.</p>
+        <a href="https://www.rafburtonwood.com/" target="_blank" style="color:#70a0e0;">RAF Burtonwood Heritage Centre →</a>
+      </div>
+      <div class="war-sites-list" style="background:#0e1828;border-color:#2a3a50;">
+        <h4 style="color:#8090a0;">Places to visit today — click to locate</h4>
+        <div id="heroPills"></div>
+      </div>
+      <div class="honour-board-header">
+        <h3>🏅 Honour Board</h3>
+        <p>A commemorative collection of Warrington's war heroes — soldiers, sailors, airmen, and civilians who gave everything</p>
+      </div>
+      <button class="add-btn" style="background:#1a1a2e;" id="toggleAddHonour"><span class="icon" style="background:#8a7a30;">+</span> Add to the Honour Board</button>
+      <div class="form-panel" id="addHonourPanel" style="background:#f8f4e8;border-color:#c8a840;">
+        <div class="form-group"><label>Full name *</label><input type="text" id="h-name" placeholder="e.g. Private Thomas Ashton"/></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Service branch *</label>
+            <select id="h-branch">
+              <option value="army">Army</option>
+              <option value="raf">Royal Air Force</option>
+              <option value="navy">Royal Navy</option>
+              <option value="merchant">Merchant Navy</option>
+              <option value="home">Home Guard</option>
+              <option value="womens">Women's Services</option>
+              <option value="civilian">Civilian (War Service)</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Rank / Role</label><input type="text" id="h-rank" placeholder="e.g. Sergeant Pilot"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>War</label>
+            <select id="h-war"><option value="WW1">WW1 (1914–18)</option><option value="WW2">WW2 (1939–45)</option><option value="other">Other conflict</option></select>
+          </div>
+          <div class="form-group"><label>Years of service</label><input type="text" id="h-years" placeholder="e.g. 1940–1944"/></div>
+        </div>
+        <div class="form-group"><label>Their story *</label><textarea id="h-story" placeholder="Tell us who they were, what they did, and what they meant…" style="min-height:90px;"></textarea></div>
+        <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="h-photo" placeholder="https://…"/></div>
+        <div class="form-group"><label>Submitted by</label><input type="text" id="h-submitter" placeholder="e.g. their granddaughter"/></div>
+        <div class="form-actions">
+          <button class="btn-submit" style="background:#2a1a00;color:#f5d090;" id="submitHonourBtn">Add to Honour Board</button>
+          <button class="btn-cancel" id="cancelHonourBtn">Cancel</button>
+        </div>
+        <div class="form-error" id="honourFormErr"></div>
+      </div>
+      <div class="list-header" id="honourCount" style="background:#1a1a2e;color:#b0a070;border-color:#3a3020;">Honour Board</div>
+      <div id="honourList"></div>
+    </div>
   </div>
 
   <!-- ══ SITE DETAIL PANEL ══ -->
@@ -668,15 +851,17 @@ function populateAreaDropdowns(){
 let activeTab='sites';
 function switchTab(tab){
   activeTab=tab;
-  ['sites','walks','stories'].forEach(t=>{
+  ['sites','walks','stories','war'].forEach(t=>{
     document.getElementById(`tab-${t}`).classList.toggle('hidden',t!==tab);
     document.getElementById(`tab-${t}-btn`).classList.toggle('active',t===tab);
   });
   if(tab!=='sites')closeDetail();
+  if(tab!=='war'){deactivateWarMode();}else{activateWarMode(activeWarPeriod);}
 }
 document.getElementById('tab-sites-btn').onclick=()=>switchTab('sites');
 document.getElementById('tab-walks-btn').onclick=()=>switchTab('walks');
 document.getElementById('tab-stories-btn').onclick=()=>switchTab('stories');
+document.getElementById('tab-war-btn').onclick=()=>switchTab('war');
 
 /* ════════════════════════════════════════
    FILTER BUTTONS
@@ -1231,6 +1416,223 @@ document.getElementById('submitStoryBtn').onclick=()=>{
 function resetStoryForm(){['s-title','s-author','s-year','s-text','s-photo'].forEach(id=>document.getElementById(id).value='');document.getElementById('s-area').value='';document.getElementById('storyFormError').style.display='none';}
 
 /* ════════════════════════════════════════
+   WAR SECTION DATA
+════════════════════════════════════════ */
+const ww1Sites=[
+  {id:'w1_cenotaph',name:'Warrington Cenotaph',lat:53.3904,lng:-2.5965,desc:'The central war memorial in Palmyra Square, honouring over 1,400 Warrington men and women who died in the First World War. Unveiled in 1926, it remains a place of remembrance and annual ceremony.',link:''},
+  {id:'w1_rylands',name:'Rylands Wire Works',lat:53.3970,lng:-2.6150,desc:'One of the world\'s largest wire manufacturers. During WW1, Rylands Brothers produced vast quantities of barbed wire shipped to the Western Front. The works employed thousands of local people and were integral to the British war effort.',link:''},
+  {id:'w1_stelphin',name:"St Elphin's Church (War Memorial)",lat:53.3908,lng:-2.5802,desc:'Inside the church is a moving war memorial recording the names of parishioners who fell in the Great War. The church served as a focus for local grief and remembrance throughout the conflict.',link:''},
+  {id:'w1_bankquay',name:'Bank Quay Station (Troop Movements)',lat:53.3878,lng:-2.5987,desc:'A vital rail hub from which thousands of Warrington men departed for training camps and embarkation ports. The platform saw tearful farewells as the Warrington Pals and other battalions left for France and beyond.',link:''},
+  {id:'w1_winwick',name:'Winwick Hospital (Military Auxiliary)',lat:53.4404,lng:-2.6036,desc:'The county asylum at Winwick was converted into a military auxiliary hospital during the war, receiving thousands of casualties from the Western Front. Local women served as nurses and volunteers.',link:''},
+  {id:'w1_museum',name:'Warrington Museum (WW1 Collection)',lat:53.3897,lng:-2.5969,desc:'The museum holds artefacts, photographs and documents relating to Warrington\'s experience of the Great War, including items from the Warrington Pals and local munitions workers.',link:''},
+];
+
+const ww2Sites=[
+  {id:'w2_burtonwood',name:'RAF Burtonwood (USAAF)',lat:53.4137,lng:-2.6525,desc:'RAF Burtonwood became USAAF Base Air Depot 1 from 1942 — the largest US Air Force installation in Europe. Over 18,000 American servicemen and women were stationed here, overhauling and supplying aircraft. The base transformed life in Warrington: dances, baseball, "overpaid, oversexed and over here." The runway was so long B-29 Superfortresses were tested here after VE Day.',linkUrl:'https://www.rafburtonwood.com/',linkLabel:'RAF Burtonwood Heritage Centre →'},
+  {id:'w2_risley',name:'Risley Royal Ordnance Factory',lat:53.4352,lng:-2.5521,desc:'Built in just 18 months from 1939, the Risley ROF employed over 30,000 workers at its peak — predominantly women from Warrington and surrounding areas. It produced shells, cartridges, detonators and pyrotechnics around the clock. The factory covered 1,000 acres and had its own internal railway.',link:''},
+  {id:'w2_crosfields',name:"Crosfield's Works (War Production)",lat:53.3978,lng:-2.6183,desc:'Joseph Crosfield & Sons — famous for soap and chemical manufacture — redirected production to war materials. The works produced glycerine (essential for explosives), chemicals and industrial materials throughout the conflict.',link:''},
+  {id:'w2_stretton',name:'HMS Blackcap / RAF Stretton',lat:53.3613,lng:-2.6085,desc:'A Fleet Air Arm station (HMS Blackcap) and later RAF station at Stretton, south of Warrington. It handled aircraft repair and storage, and was home to squadrons involved in Atlantic and European operations.',link:''},
+  {id:'w2_cenotaph',name:'Warrington Cenotaph (WW2 Names Added)',lat:53.3904,lng:-2.5965,desc:'After 1945, the names of those who fell in the Second World War were added to the cenotaph. The memorial now honours those lost in both conflicts — a dual testament to Warrington\'s sacrifice across two generations.',link:''},
+  {id:'w2_doolittlebridge',name:'Doolittle Bridge, Burtonwood',lat:53.4150,lng:-2.6450,desc:'Named in honour of General Jimmy Doolittle, the USAAF commander. Several local landmarks and streets around Burtonwood were named by American servicemen, leaving a cultural legacy that persists today.',link:''},
+];
+
+const heroSites=[
+  {id:'h_cenotaph',name:'Warrington Cenotaph',lat:53.3904,lng:-2.5965,desc:'The Borough\'s primary war memorial in Palmyra Square. Remembrance Sunday services are held here annually. Open to visitors year-round.'},
+  {id:'h_burtonwood',name:'RAF Burtonwood Heritage Centre',lat:53.4137,lng:-2.6525,desc:'A dedicated museum preserving the history of the base and its American and British personnel. Houses aircraft memorabilia, personal stories, and artefacts from the base\'s remarkable wartime life.',linkUrl:'https://www.rafburtonwood.com/'},
+  {id:'h_museum',name:'Warrington Museum & Library',lat:53.3897,lng:-2.5969,desc:'The museum houses significant WW1 and WW2 collections including medals, photographs, uniforms and personal effects from local servicemen and women.'},
+  {id:'h_stelphin',name:"St Elphin's Church",lat:53.3908,lng:-2.5802,desc:'Contains war memorials from both conflicts. The churchyard includes the graves of servicemen. A place of quiet reflection in the heart of Warrington.'},
+  {id:'h_winwick',name:'St Oswald\'s Church, Winwick',lat:53.4452,lng:-2.6041,desc:'The church near the 1648 Civil War battlefield also contains WW1 memorials. An ancient site still holding history in its stones.'},
+  {id:'h_victoripark',name:'Victoria Park War Memorial',lat:53.3886,lng:-2.5923,desc:'A neighbourhood war memorial in the park, recording local names. Parks across Warrington were planted with memorial trees and features in the aftermath of both wars.'},
+];
+
+/* WAR persistence */
+const WAR_KEYS={memories:'warrington-war-memories-v1',honour:'warrington-honour-board-v1'};
+let warMemories=loadJ(WAR_KEYS.memories);   // [{id,period,title,author,connection,text,photo}]
+let honourBoard=loadJ(WAR_KEYS.honour);     // [{id,name,branch,rank,war,years,story,photo,submitter}]
+
+/* Branch config */
+const BRANCH_COL={army:'#4a6a2a',raf:'#2a4a8a',navy:'#0a2a5a',merchant:'#2a6a6a',home:'#5a2a6a',womens:'#7a2a5a',civilian:'#6a3a1a',other:'#5a5a5a'};
+const BRANCH_LABEL={army:'Army',raf:'Royal Air Force',navy:'Royal Navy',merchant:'Merchant Navy',home:'Home Guard',womens:"Women's Services",civilian:'Civilian (War Service)',other:'Other'};
+
+/* War map state */
+let activeWarPeriod='ww1';
+let warMapMarkers=[];
+
+function makeWarIcon(col,emoji){
+  return L.divIcon({html:`<div style="background:${col};color:#fff;border:2px solid #fff;border-radius:4px;padding:3px 5px;font-size:.8rem;box-shadow:0 2px 5px rgba(0,0,0,.4);white-space:nowrap;font-family:Arial,sans-serif;">${emoji}</div>`,className:'',iconAnchor:[0,0]});
+}
+
+function clearWarMarkers(){
+  warMapMarkers.forEach(m=>map.removeLayer(m));
+  warMapMarkers=[];
+}
+
+function placeWarSiteMarkers(sites,emoji,col){
+  sites.forEach(s=>{
+    const m=L.marker([s.lat,s.lng],{icon:makeWarIcon(col,emoji)})
+      .bindPopup(`<div class="popup-title">${esc(s.name)}</div><div class="popup-desc">${esc(s.desc)}</div>${s.linkUrl?`<a class="popup-link" href="${esc(s.linkUrl)}" target="_blank" rel="noopener">${esc(s.linkLabel||'More info')}</a>`:''}`,{maxWidth:240})
+      .addTo(map);
+    warMapMarkers.push(m);
+  });
+}
+
+function buildWarPills(containerId,sites,cls,clickSites){
+  const el=document.getElementById(containerId);if(!el)return;
+  el.innerHTML='';
+  sites.forEach((s,i)=>{
+    const p=document.createElement('span');
+    p.className=`war-site-pill ${cls}`;p.textContent=s.name;
+    p.onclick=()=>{map.setView([s.lat,s.lng],15,{animate:true});warMapMarkers[i]?.openPopup();};
+    el.appendChild(p);
+  });
+}
+
+function activateWarMode(period){
+  activeWarPeriod=period;
+  clearWarMarkers();
+  // Switch sub-nav active state
+  document.querySelectorAll('.war-sub-btn').forEach(b=>b.classList.toggle('active',b.dataset.war===period));
+  // Show/hide period panels
+  ['ww1','ww2','heroes'].forEach(p=>{
+    document.getElementById(`war-${p}`).classList.toggle('active',p===period);
+  });
+
+  const mapEl=document.getElementById('map');
+  if(period==='ww1'){
+    mapEl.className='war-sepia';
+    placeWarSiteMarkers(ww1Sites,'🪖','#5a4010');
+    buildWarPills('ww1Pills',ww1Sites,'ww1',ww1Sites);
+    map.setView([53.3900,-2.5800],13,{animate:true});
+  } else if(period==='ww2'){
+    mapEl.className='war-sepia';
+    placeWarSiteMarkers(ww2Sites,'✈️','#3a1010');
+    buildWarPills('ww2Pills',ww2Sites,'ww2',ww2Sites);
+    map.setView([53.4000,-2.6100],12,{animate:true});
+  } else {
+    mapEl.className='war-heroes';
+    placeWarSiteMarkers(heroSites,'🎖','#102040');
+    buildWarPills('heroPills',heroSites,'heroes',heroSites);
+    map.setView([53.3950,-2.5900],13,{animate:true});
+  }
+  buildWarMemoryList(period);
+  buildHonourBoard();
+}
+
+function deactivateWarMode(){
+  clearWarMarkers();
+  document.getElementById('map').className='';
+}
+
+/* Sub-nav clicks */
+document.querySelectorAll('.war-sub-btn').forEach(btn=>{
+  btn.onclick=()=>activateWarMode(btn.dataset.war);
+});
+
+/* ── WAR MEMORIES ── */
+function buildWarMemoryList(period){
+  const pid=period==='heroes'?null:period; // heroes shows all
+  const listId=period==='ww1'?'ww1MemList':period==='ww2'?'ww2MemList':null;
+  const countId=period==='ww1'?'ww1MemCount':period==='ww2'?'ww2MemCount':null;
+  if(!listId)return;
+  const relevant=warMemories.filter(m=>m.period===period);
+  document.getElementById(countId).textContent=`${relevant.length} memor${relevant.length===1?'y':'ies'} shared`;
+  const list=document.getElementById(listId);
+  if(!relevant.length){list.innerHTML='<div style="padding:16px 14px;font-size:.78rem;color:#8a7a60;font-family:Arial,sans-serif;font-style:italic;">No memories shared yet. Be the first to add one.</div>';return;}
+  list.innerHTML=relevant.slice().reverse().map(m=>`
+    <div class="memory-card">
+      ${m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="" onerror="this.style.display='none'"/>`:''}
+      <div class="memory-name">${esc(m.title)}</div>
+      <div class="memory-meta">${esc(m.author||'Anonymous')}${m.connection?' · '+esc(m.connection):''}</div>
+      <div class="memory-text">${esc(m.text)}</div>
+    </div>`).join('');
+}
+
+function setupWarMemoryForm(period,toggleId,panelId,titleId,authorId,connId,textId,photoId,submitId,cancelId,errId){
+  document.getElementById(toggleId).onclick=()=>{
+    const open=document.getElementById(panelId).classList.toggle('open');
+    document.getElementById(toggleId).querySelector('.icon').textContent=open?'✕':'+';
+  };
+  document.getElementById(cancelId).onclick=()=>{
+    document.getElementById(panelId).classList.remove('open');
+    document.getElementById(toggleId).querySelector('.icon').textContent='+';
+  };
+  document.getElementById(submitId).onclick=()=>{
+    const title=document.getElementById(titleId).value.trim();
+    const text=document.getElementById(textId).value.trim();
+    const err=document.getElementById(errId);err.style.display='none';
+    if(!title){err.textContent='Please enter a title.';err.style.display='block';return;}
+    if(!text){err.textContent='Please write your memory.';err.style.display='block';return;}
+    const mem={id:Date.now().toString(),period,title,author:document.getElementById(authorId).value.trim(),connection:document.getElementById(connId).value.trim(),text,photo:document.getElementById(photoId).value.trim()};
+    warMemories.push(mem);saveJ(WAR_KEYS.memories,warMemories);
+    [titleId,authorId,connId,textId,photoId].forEach(i=>document.getElementById(i).value='');
+    document.getElementById(panelId).classList.remove('open');
+    document.getElementById(toggleId).querySelector('.icon').textContent='+';
+    buildWarMemoryList(period);
+    showToast('Memory added — thank you!');
+  };
+}
+
+setupWarMemoryForm('ww1','toggleAddWw1Memory','addWw1MemoryPanel','wm1-title','wm1-author','wm1-connection','wm1-text','wm1-photo','submitWw1Btn','cancelWw1Btn','ww1MemErr');
+setupWarMemoryForm('ww2','toggleAddWw2Memory','addWw2MemoryPanel','wm2-title','wm2-author','wm2-connection','wm2-text','wm2-photo','submitWw2Btn','cancelWw2Btn','ww2MemErr');
+
+/* ── HONOUR BOARD ── */
+function buildHonourBoard(){
+  const list=document.getElementById('honourList');
+  document.getElementById('honourCount').textContent=`${honourBoard.length} entr${honourBoard.length===1?'y':'ies'} on the Honour Board`;
+  if(!honourBoard.length){
+    list.innerHTML='<div style="padding:18px 14px;text-align:center;font-size:.8rem;color:#8a7a60;font-family:Arial,sans-serif;font-style:italic;line-height:1.7;">The Honour Board awaits its first entry.<br>Add a soldier, sailor, airman, or civilian hero.</div>';
+    return;
+  }
+  list.innerHTML=honourBoard.slice().reverse().map(h=>{
+    const col=BRANCH_COL[h.branch]||'#5a5a5a';
+    const label=BRANCH_LABEL[h.branch]||h.branch;
+    const short=h.story.slice(0,180);const isLong=h.story.length>180;
+    return `<div class="honour-card" style="--branch-col:${col};">
+      ${h.photo?`<img class="honour-photo" src="${esc(h.photo)}" alt="" onerror="this.style.display='none'"/>`:''}
+      <div class="honour-name">${esc(h.name)}</div>
+      <span class="honour-branch-badge" style="background:${col};">${label}</span>
+      ${h.rank?`<div class="honour-rank">${esc(h.rank)}</div>`:''}
+      <div class="honour-years">${esc(h.war||'')}${h.years?' · '+esc(h.years):''}</div>
+      <div class="honour-story" data-full="${esc(h.story)}" data-short="${esc(short)}">${esc(short)}${isLong?'…':''}</div>
+      ${isLong?`<span class="honour-expand">Read more</span>`:''}
+      ${h.submitter?`<div class="honour-submitter">Added by ${esc(h.submitter)}</div>`:''}
+    </div>`;
+  }).join('');
+  // Attach expand handlers
+  list.querySelectorAll('.honour-expand').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const p=btn.previousElementSibling;
+      if(btn.textContent==='Read more'){p.textContent=p.dataset.full;btn.textContent='Show less';}
+      else{p.textContent=p.dataset.short+'…';btn.textContent='Read more';}
+    });
+  });
+}
+
+document.getElementById('toggleAddHonour').onclick=()=>{
+  const open=document.getElementById('addHonourPanel').classList.toggle('open');
+  document.getElementById('toggleAddHonour').querySelector('.icon').textContent=open?'✕':'+';
+};
+document.getElementById('cancelHonourBtn').onclick=()=>{
+  document.getElementById('addHonourPanel').classList.remove('open');
+  document.getElementById('toggleAddHonour').querySelector('.icon').textContent='+';
+};
+document.getElementById('submitHonourBtn').onclick=()=>{
+  const name=document.getElementById('h-name').value.trim();
+  const story=document.getElementById('h-story').value.trim();
+  const err=document.getElementById('honourFormErr');err.style.display='none';
+  if(!name){err.textContent='Please enter a name.';err.style.display='block';return;}
+  if(!story){err.textContent='Please write their story.';err.style.display='block';return;}
+  const entry={id:Date.now().toString(),name,branch:document.getElementById('h-branch').value,rank:document.getElementById('h-rank').value.trim(),war:document.getElementById('h-war').value,years:document.getElementById('h-years').value.trim(),story,photo:document.getElementById('h-photo').value.trim(),submitter:document.getElementById('h-submitter').value.trim()};
+  honourBoard.push(entry);saveJ(WAR_KEYS.honour,honourBoard);
+  ['h-name','h-rank','h-years','h-story','h-photo','h-submitter'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('h-branch').value='army';document.getElementById('h-war').value='WW1';
+  document.getElementById('addHonourPanel').classList.remove('open');
+  document.getElementById('toggleAddHonour').querySelector('.icon').textContent='+';
+  buildHonourBoard();
+  showToast('Added to the Honour Board — thank you for remembering them.');
+};
+
+/* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
 populateAreaDropdowns();
@@ -1241,6 +1643,7 @@ buildFilterButtons();
 buildSiteCards();
 buildWalkCards();
 buildStoryCards();
+buildHonourBoard();
 checkUrlHash();
 
 // make openDetail globally accessible (called from popup HTML)
