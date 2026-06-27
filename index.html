@@ -382,7 +382,7 @@ footer a{color:#5a7a5a;}
   </div>
 
   <!-- ══ WALKS TAB ══ -->
-  <div class="tab-content hidden" id="tab-walks">
+  <div class="tab-content hidden" id="tab-walks" style="display:none;">
     <div class="walks-hero"><h2>Footsteps into the Past</h2><p>Heritage walks around Warrington</p></div>
     <button class="add-btn add-btn-walk" id="toggleAddWalk"><span class="icon">+</span> Add a heritage walk</button>
     <div class="form-panel" id="addWalkPanel">
@@ -414,7 +414,7 @@ footer a{color:#5a7a5a;}
   </div>
 
   <!-- ══ STORIES TAB ══ -->
-  <div class="tab-content hidden" id="tab-stories">
+  <div class="tab-content hidden" id="tab-stories" style="display:none;">
     <div class="stories-hero"><h2>Local Stories</h2><p>Memories &amp; history from Warrington's communities</p></div>
     <button class="add-btn add-btn-story" id="toggleAddStory"><span class="icon">+</span> Share a local story</button>
     <div class="form-panel" id="addStoryPanel">
@@ -440,7 +440,7 @@ footer a{color:#5a7a5a;}
   </div>
 
   <!-- ══ WAR TAB ══ -->
-  <div class="tab-content hidden" id="tab-war">
+  <div class="tab-content hidden" id="tab-war" style="display:none;">
     <div class="war-hero">
       <h2>⚔️ Warrington at War</h2>
       <p>Honouring those who served, sacrificed &amp; survived</p>
@@ -854,8 +854,10 @@ let activeTab='sites';
 function switchTab(tab){
   activeTab=tab;
   ['sites','walks','stories','war'].forEach(t=>{
-    document.getElementById(`tab-${t}`).classList.toggle('hidden',t!==tab);
-    document.getElementById(`tab-${t}-btn`).classList.toggle('active',t===tab);
+    const el=document.getElementById('tab-'+t);
+    const btn=document.getElementById('tab-'+t+'-btn');
+    if(el) el.style.display=(t===tab)?'flex':'none';
+    if(btn) btn.classList.toggle('active',t===tab);
   });
   if(tab!=='sites')closeDetail();
   if(tab!=='war'){deactivateWarMode();}else{activateWarMode(activeWarPeriod);}
